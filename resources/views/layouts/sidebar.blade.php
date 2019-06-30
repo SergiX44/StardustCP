@@ -4,7 +4,7 @@
     <aside id="sidebar-wrapper">
         <!-- sidebar brand -->
         <div class="sidebar-brand">
-            <a href="index.html">Stisla</a>
+            <a href="index.html">{{ config('app.name') }}</a>
         </div>
         <!-- sidebar menu -->
         <ul class="sidebar-menu">
