@@ -29,9 +29,7 @@
   },
   "extra": {
     "laravel": {
-      "dont-discover": [
-        "spatie/laravel-menu"
-      ]
+      "dont-discover": []
     }
   },
   "autoload": {

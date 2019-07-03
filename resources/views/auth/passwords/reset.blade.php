@@ -1,5 +1,7 @@
 @extends('layouts.auth')
 
+@section('title', 'Password reset')
+
 @section('content')
     <div class="container mt-5">
         <div class="row">
