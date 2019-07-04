@@ -32,3 +32,7 @@ mix.scripts([
 
 mix.copyDirectory('node_modules/stisla/assets/fonts', 'public/fonts/');
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts/');
+
+if (mix.inProduction()) {
+    mix.version();
+}

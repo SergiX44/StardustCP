@@ -1,0 +1,45 @@
+{
+    "name": "stardustcp/web-module",
+    "description": "Web module for StardustCP",
+    "keywords": [
+        "stardustcp",
+        "web-module"
+    ],
+    "homepage": "https://github.com/stardustcp/web-module",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Sergio Brighenti",
+            "email": "sergio@brighenti.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Web\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Web\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Web\\WebServiceProvider"
+            ]
+        }
+    }
+}

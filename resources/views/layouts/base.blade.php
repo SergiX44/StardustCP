@@ -10,13 +10,13 @@
     <title>{{ config('app.name') }} :: @yield('title')</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/vendors.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/vendors.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-@yield('_body')
+@yield('_body_')
 <!-- Scripts -->
-<script src="{{ asset('js/vendors.js') }}"></script>
-<script src="{{ asset('js/app.js') }}" defer></script>
+<script src="{{ mix('js/vendors.js') }}"></script>
+<script src="{{ mix('js/app.js') }}" defer></script>
 </body>
 </html>

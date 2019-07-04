@@ -35,8 +35,7 @@ class Menu
 	public function section(?string $name, int $index = 0)
 	{
 		if (isset($this->order[$index])) {
-			$last = array_key_last($this->order);
-			$index = $last === 0 ? $last : $last + 1;
+			$index = count($this->order);
 		}
 		$this->lastSection = $this->order[$index] = $name;
 		$this->menu[$name] = [];
@@ -96,7 +95,9 @@ class Menu
 	public function render()
 	{
 		$lis = '';
-		foreach ($this->menu as $section => $entries) {
+		ksort($this->order);
+		foreach ($this->order as $section) {
+			$entries = $this->menu[$section];
 
 			if ($this->sectionClasses === null) {
 				$lis .= "<li>{$section}</li>";

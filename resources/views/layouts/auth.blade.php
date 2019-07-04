@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('_body')
+@section('_body_')
     <div id="app">
         <section class="section">
             @yield('content')
