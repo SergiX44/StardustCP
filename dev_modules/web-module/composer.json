@@ -19,12 +19,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Web\\": "src"
+            "Modules\\Web\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Modules\\Web\\Tests\\": "tests"
+            "Modules\\Web\\Tests\\": "tests/"
         }
     },
     "scripts": {

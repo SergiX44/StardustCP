@@ -1,6 +1,6 @@
 <div class="section-header-breadcrumb">
     <div class="breadcrumb-item">
-         <a href="{{ route('home') }}"><i class="fas fa-home fa-fw"></i> Home</a>
+         <a href="{{ route('core.home') }}"><i class="fas fa-home fa-fw"></i> Home</a>
     </div>
     @foreach($b as $name => $url)
         @if($url !== null)

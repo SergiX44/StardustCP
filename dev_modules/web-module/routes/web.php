@@ -1,3 +1,7 @@
 <?php
 
-Route::get('/web', \Modules\Web\Controllers\TestController::class.'@test')->name('web.test');
+use Modules\Web\Controllers\TestController;
+
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'web', 'as' => 'web.'], function () {
+	Route::get('/test', [TestController::class, 'test'])->name('test');
+});
