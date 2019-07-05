@@ -28,11 +28,7 @@ class MenuServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		$this->app->booted(function () {
-			app('menu')
-				->section('Home', 0)
-				->route('Dashboard', '<i class="fas fa-tachometer-alt"></i>', 'home')
-				->section('System')
-				->route('Configuration', '<i class="fas fa-cog"></i>', 'root');
+			event('menu.ready');
 		});
 	}
 }

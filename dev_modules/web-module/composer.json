@@ -39,6 +39,9 @@
         "laravel": {
             "providers": [
                 "Modules\\Web\\WebServiceProvider"
+            ],
+            "events" : [
+                "Modules\\Web\\Listeners"
             ]
         }
     }
