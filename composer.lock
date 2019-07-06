@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "127f768892da5bfa484ca0dff32e8241",
+    "content-hash": "3695ab0b08aa9a319d9a8bb1247a2b33",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1405,20 +1405,72 @@
             "time": "2018-07-19T23:38:55+00:00"
         },
         {
-            "name": "stardustcp/web-module",
+            "name": "stardustcp/domain-module",
             "version": "dev-master",
             "dist": {
                 "type": "path",
-                "url": "./dev_modules/web-module",
-                "reference": "2bcf301d72d1d11214aef3ade3c5e6023156b215",
+                "url": "./dev_modules/domain-module",
+                "reference": "d5eb44b98e2bf13e253d8fd58670078fb312dd30",
                 "shasum": null
             },
             "require": {
                 "php": "^7.1"
             },
-            "require-dev": {
-                "larapack/dd": "^1.0",
-                "phpunit/phpunit": "^8.2"
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Modules\\Domain\\DomainServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Modules\\Domain\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Modules\\Domain\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ],
+                "test-coverage": [
+                    "vendor/bin/phpunit --coverage-html coverage"
+                ]
+            },
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sergio Brighenti",
+                    "email": "sergio@brighenti.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Migrations module for the Web and DNS module",
+            "homepage": "https://github.com/stardustcp/domain-module",
+            "keywords": [
+                "domain-module",
+                "stardustcp"
+            ]
+        },
+        {
+            "name": "stardustcp/web-module",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./dev_modules/web-module",
+                "reference": "31f0d79fab7d962a4b544c430d6a2ad897ca842c",
+                "shasum": null
+            },
+            "require": {
+                "php": "^7.1",
+                "stardustcp/domain-module": "dev-master"
             },
             "type": "library",
             "extra": {
@@ -1430,12 +1482,12 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Modules\\Web\\": "src"
+                    "Modules\\Web\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "Modules\\Web\\Tests\\": "tests"
+                    "Modules\\Web\\Tests\\": "tests/"
                 }
             },
             "scripts": {

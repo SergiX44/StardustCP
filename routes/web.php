@@ -15,7 +15,9 @@
 Auth::routes(['register' => false]);
 
 Route::group(['middleware' => ['auth'], 'as' => 'core.'], function () {
-	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('/', 'HomeController@root')->name('root');
+	Route::get('/home', 'HomeController@index')->name('home');
+
+	Route::get('/configuration', 'ConfigurationController@configuration')->name('configuration');
 });
 

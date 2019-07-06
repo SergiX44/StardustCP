@@ -1,12 +1,12 @@
 {
-    "name": "stardustcp/web-module",
+    "name": "stardustcp/domain-module",
     "version": "1.0",
-    "description": "Web module for StardustCP",
+    "description": "Migrations module for the Web and DNS module",
     "keywords": [
         "stardustcp",
-        "web-module"
+        "domain-module"
     ],
-    "homepage": "https://github.com/stardustcp/web-module",
+    "homepage": "https://github.com/stardustcp/domain-module",
     "license": "AGPL-3.0",
     "authors": [
         {
@@ -17,17 +17,16 @@
     ],
     "require": {
         "php": "^7.1",
-        "ext-json": "*",
-        "stardustcp/domain-module": "dev-master"
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Web\\": "src/"
+            "Modules\\Domain\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Modules\\Web\\Tests\\": "tests/"
+            "Modules\\Domain\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -43,7 +42,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Web\\WebServiceProvider"
+                "Modules\\Domain\\DomainServiceProvider"
             ]
         }
     }

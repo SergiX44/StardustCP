@@ -14,7 +14,7 @@ class MenuServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->singleton(Menu::class, function ($app) {
+		$this->app->singleton(Menu::class, function () {
 			return Menu::make('sidebar-menu', 'menu-header');
 		});
 		$this->app->alias(Menu::class, 'menu');

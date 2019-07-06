@@ -1,5 +1,6 @@
 {
   "name": "startdustcp/startdustcp",
+  "version": "1.0",
   "type": "project",
   "description": "The StardustCP control panel.",
   "keywords": [
@@ -7,11 +8,15 @@
     "control",
     "panel"
   ],
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "repositories": [
     {
       "type": "path",
       "url": "./dev_modules/web-module"
+    },
+    {
+      "type": "path",
+      "url": "./dev_modules/domain-module"
     }
   ],
   "require": {
@@ -19,7 +24,8 @@
     "fideloper/proxy": "^4.0",
     "laravel/framework": "5.8.*",
     "laravel/tinker": "^1.0",
-    "stardustcp/web-module": "dev-master"
+    "stardustcp/web-module": "dev-master",
+    "ext-json": "*"
   },
   "require-dev": {
     "beyondcode/laravel-dump-server": "^1.0",

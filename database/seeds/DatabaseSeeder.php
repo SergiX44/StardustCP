@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
 			'name' => 'admin',
 			'surname' => 'god',
 			'email' => 'a@a.a',
-			'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+			'password' => \Illuminate\Support\Facades\Hash::make('aaa'), // password
 		]);
 		// $this->call(UsersTableSeeder::class);
 	}
