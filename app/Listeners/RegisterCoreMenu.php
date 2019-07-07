@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace Core\Listeners;
 
 class RegisterCoreMenu
 {

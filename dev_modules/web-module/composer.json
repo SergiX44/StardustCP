@@ -18,7 +18,8 @@
     "require": {
         "php": "^7.1",
         "ext-json": "*",
-        "stardustcp/domain-module": "dev-master"
+        "thecodingmachine/safe": "^0.1.16",
+        "stardustcp/domain-module": "^1.0"
     },
     "autoload": {
         "psr-4": {

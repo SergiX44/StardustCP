@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Providers;
+namespace Core\Providers;
 
-use App\Modules\ModulesManager;
+use Core\Modules\ModulesManager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

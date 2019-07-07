@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules;
+namespace Core\Modules;
 
 
 abstract class BaseModule

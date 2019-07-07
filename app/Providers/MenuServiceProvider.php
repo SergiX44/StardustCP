@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Providers;
+namespace Core\Providers;
 
-use App\Menu\Menu;
+use Core\Menu\Menu;
 use Illuminate\Support\ServiceProvider;
 
 class MenuServiceProvider extends ServiceProvider

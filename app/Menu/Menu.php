@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Menu;
+namespace Core\Menu;
 
 
 use BadMethodCallException;
