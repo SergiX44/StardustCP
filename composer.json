@@ -17,6 +17,10 @@
     {
       "type": "path",
       "url": "./dev_modules/domain-module"
+    },
+    {
+      "type": "path",
+      "url": "./dev_modules/database-module"
     }
   ],
   "require": {
@@ -25,7 +29,8 @@
     "fideloper/proxy": "^4.0",
     "laravel/framework": "5.8.*",
     "laravel/tinker": "^1.0",
-    "stardustcp/web-module": "^1.0"
+    "stardustcp/web-module": "^1.0",
+    "stardustcp/database-module": "^1.0"
   },
   "require-dev": {
     "beyondcode/laravel-dump-server": "^1.0",

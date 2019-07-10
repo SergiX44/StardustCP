@@ -12,7 +12,7 @@ class HomeController extends Controller
 	 */
 	public function root()
 	{
-		return view('welcome');
+		return redirect()->route('core.home');
 	}
 
 	/**

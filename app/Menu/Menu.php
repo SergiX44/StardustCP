@@ -4,8 +4,8 @@
 namespace Core\Menu;
 
 
-use BadMethodCallException;
 use Illuminate\Support\Facades\Request;
+use InvalidArgumentException;
 
 class Menu
 {
@@ -32,13 +32,21 @@ class Menu
 	 * @param int $index
 	 * @return $this
 	 */
-	public function section(?string $name, int $index = 0)
+	public function section(?string $name, int $index = -1)
 	{
-		if (isset($this->order[$index])) {
-			$index = count($this->order);
+		if (array_key_exists($name, $this->menu)) {
+			$this->lastSection = $name;
+		} else {
+			if (array_key_exists($index, $this->order)) {
+				if ($index < 0) {
+					$index = min(array_keys($this->order)) - 1;
+				} else {
+					$index = max(array_keys($this->order)) + 1;
+				}
+			}
+			$this->lastSection = $this->order[$index] = $name;
+			$this->menu[$name] = [];
 		}
-		$this->lastSection = $this->order[$index] = $name;
-		$this->menu[$name] = [];
 		return $this;
 	}
 
@@ -67,6 +75,27 @@ class Menu
 	}
 
 	/**
+	 * @param string $text
+	 * @param string $icon
+	 * @param string $url
+	 * @return $this
+	 */
+	public function url(string $text, string $icon, string $url)
+	{
+		if ($this->lastSection === null) {
+			$this->section(null);
+		}
+		$this->menu[$this->lastSection][] = [
+			'text' => $text,
+			'icon' => $icon,
+			'route' => $url,
+			'route_name' => null,
+		];
+
+		return $this;
+	}
+
+	/**
 	 * Add a class to the last menu entry
 	 * @param string $class
 	 * @return $this
@@ -80,7 +109,7 @@ class Menu
 		$index = array_key_last($this->menu[$this->lastSection]);
 
 		if ($index === 0) {
-			throw new BadMethodCallException('The current menu entry is empty.');
+			throw new InvalidArgumentException('The current menu entry is empty.');
 		}
 
 		$this->menu[$this->lastSection][$index]['class'] = $class;
@@ -94,8 +123,25 @@ class Menu
 	 */
 	public function render()
 	{
+		uksort($this->order, function ($first, $second) {
+			if ($first < 0 && $second < 0) {
+				if ($first === $second) {
+					return 0;
+				}
+				return $first < $second ? 1 : -1;
+			} else if ($first < 0 && $second >= 0) {
+				return 1;
+			} else if ($second < 0 && $first >= 0) {
+				return -1;
+			}
+
+			if ($first === $second) {
+				return 0;
+			}
+			return ($first < $second) ? -1 : 1;
+		});
+
 		$lis = '';
-		ksort($this->order);
 		foreach ($this->order as $section) {
 			$entries = $this->menu[$section];
 

@@ -1,12 +1,12 @@
 {
-    "name": "stardustcp/domain-module",
+    "name": "stardustcp/database-module",
     "version": "1.0",
-    "description": "Passive module for the web, database, email, ... modules.",
+    "description": "Database module for StardustCP",
     "keywords": [
         "stardustcp",
-        "domain-module"
+        "database-module"
     ],
-    "homepage": "https://github.com/stardustcp/domain-module",
+    "homepage": "https://github.com/stardustcp/database-module",
     "license": "AGPL-3.0",
     "authors": [
         {
@@ -18,16 +18,17 @@
     "require": {
         "php": "^7.1",
         "ext-json": "*",
-        "thecodingmachine/safe": "^0.1.16"
+        "thecodingmachine/safe": "^0.1.16",
+        "stardustcp/domain-module": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Domain\\": "src/"
+            "Modules\\Database\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Modules\\Domain\\Tests\\": "tests/"
+            "Modules\\Database\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -43,7 +44,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Domain\\DomainServiceProvider"
+                "Modules\\Database\\DatabaseServiceProvider"
             ]
         }
     }
