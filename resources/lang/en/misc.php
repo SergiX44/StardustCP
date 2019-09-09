@@ -1,5 +1,6 @@
 <?php
 return [
-
-	'back' => 'Back'
+	'back' => 'Back',
+	'cancel' => 'Cancel',
+	'save' => 'Save',
 ];

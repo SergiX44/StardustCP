@@ -2,10 +2,12 @@
 
 namespace Core\Providers;
 
+
 use Core\Modules\ModuleManager;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class CoreServiceProvider extends ServiceProvider
 {
 	/**
 	 * Register any application services.
@@ -28,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		//
+		Blade::component('layouts.form.field', 'form_field');
 	}
 }
