@@ -2,6 +2,7 @@
 
 namespace Modules\Database;
 
+use Core\Modules\ModuleManager;
 use Illuminate\Support\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
@@ -22,7 +23,7 @@ class DatabaseServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		app('modules')->register(DatabaseModule::class);
+		app(ModuleManager::class)->register(DatabaseModule::class);
 
 		$this->loadMigrationsFrom(__DIR__ . '/../migrations/');
 		$this->loadRoutesFrom(__DIR__ . '/../routes/web.php');

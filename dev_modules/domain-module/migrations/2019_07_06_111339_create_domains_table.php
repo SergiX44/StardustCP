@@ -16,10 +16,14 @@ class CreateDomainsTable extends Migration
         Schema::create('domains', function (Blueprint $table) {
 	        $table->bigIncrements('id');
 	        $table->unsignedBigInteger('user_id')->nullable();
-	        $table->string('domain');
-	        $table->unsignedInteger('use_counter')->default(0);
+	        $table->string('name');
+	        $table->string('extension')->nullable();
+	        $table->boolean('is_sld')->default(false);
+	        $table->bigIncrements('parent_domain')->nullable();
+	        $table->unsignedInteger('used_count')->default(0);
 	        $table->timestamps();
 
+	        $table->foreign('parent_domain')->references('id')->on('domains')->onUpdate('cascade')->onDelete('cascade');
 	        $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }

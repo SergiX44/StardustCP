@@ -2,6 +2,7 @@
 
 namespace Modules\Domain;
 
+use Core\Modules\ModuleManager;
 use Illuminate\Support\ServiceProvider;
 
 class DomainServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class DomainServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		app('modules')->register(DomainModule::class);
+		app(ModuleManager::class)->register(DomainModule::class);
 
 		$this->loadMigrationsFrom(__DIR__ . '/../migrations/');
 	}

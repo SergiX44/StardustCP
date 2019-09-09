@@ -2,7 +2,7 @@
 
 namespace Core\Providers;
 
-use Core\Modules\ModulesManager;
+use Core\Modules\ModuleManager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,10 +15,10 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		// Register the module manager
-		$this->app->singleton(ModulesManager::class, function () {
-			return new ModulesManager();
+		$this->app->singleton(ModuleManager::class, function () {
+			return new ModuleManager();
 		});
-		$this->app->alias(ModulesManager::class, 'modules');
+		$this->app->alias(ModuleManager::class, 'modules');
 	}
 
 	/**

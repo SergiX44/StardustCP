@@ -3,10 +3,10 @@
 namespace Core\Modules;
 
 
-abstract class BaseModule
+abstract class BaseModule implements IModule
 {
 
-	public abstract function name();
+
 
 	public function fancyName()
 	{
