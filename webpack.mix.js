@@ -17,6 +17,7 @@ mix.js('resources/js/app.js', 'public/js')
 mix.styles([
     'node_modules/bootstrap/dist/css/bootstrap.css',
     'node_modules/@fortawesome/fontawesome-free/css/all.css',
+    'node_modules/select2/dist/css/select2.min.css',
     'node_modules/stisla/assets/css/style.css',
     'node_modules/stisla/assets/css/components.css'
 ], 'public/css/vendors.css');
@@ -26,6 +27,7 @@ mix.scripts([
     'node_modules/bootstrap/dist/js/bootstrap.bundle.js',
     'node_modules/jquery.nicescroll/dist/jquery.nicescroll.js',
     'node_modules/moment/moment.js',
+    'node_modules/select2/dist/js/select2.full.min.js',
     'node_modules/stisla/assets/js/stisla.js',
     'node_modules/stisla/assets/js/scripts.js'
 ], 'public/js/vendors.js');

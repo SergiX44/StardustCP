@@ -30,7 +30,18 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Blade::component('layouts.form.input', 'form_input');
-		Blade::component('layouts.form.submit', 'form_submit');
+		$this->setupBladeAliases();
+	}
+
+	/**
+	 * Register blade aliases
+	 */
+	private function setupBladeAliases()
+	{
+		Blade::include('layouts.form.input', 'form_input');
+		Blade::include('layouts.form.submit', 'form_submit');
+		Blade::include('layouts.form.radiobtn', 'form_radio');
+		Blade::include('layouts.form.select', 'form_select');
+		Blade::include('layouts.form.switch', 'form_switch');
 	}
 }
