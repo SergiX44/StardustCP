@@ -5,9 +5,10 @@
         <span class="invalid-feedback">
             @error($name)
                 {{ $message }}
-            @else
-                @lang('auth.email_required')
             @enderror
+            @isset($invalid)
+                @lang($invalid)
+            @endisset
         </span>
     </div>
 </div>

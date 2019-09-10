@@ -30,6 +30,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Blade::component('layouts.form.field', 'form_field');
+		Blade::component('layouts.form.input', 'form_input');
+		Blade::component('layouts.form.submit', 'form_submit');
 	}
 }
