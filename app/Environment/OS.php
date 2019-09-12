@@ -3,6 +3,8 @@
 
 namespace Core\Environment;
 
+use Core\Environment\PackageManagers\Apt;
+use Core\Environment\PackageManagers\IPackageManager;
 use function Safe\file_get_contents;
 
 class OS {
@@ -68,6 +70,17 @@ class OS {
 			return $distro === $this->distro;
 		}
 		return $distro === $this->distro && $version === $this->version;
+	}
+
+	/**
+	 * @return IPackageManager|null
+	 */
+	public function getPackageManager(): ?IPackageManager {
+		if ($this->is(self::DEBIAN)) {
+			return new Apt($this);
+		}
+
+		return null;
 	}
 
 	/**
