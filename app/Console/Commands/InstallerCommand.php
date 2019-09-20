@@ -7,11 +7,15 @@ use Core\Environment\PackageManagers\IPackageManager;
 use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 use Symfony\Component\Process\Process;
 
-class InstallerCommand extends Command {
+class InstallerCommand extends Command
+{
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -31,7 +35,8 @@ class InstallerCommand extends Command {
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -41,7 +46,8 @@ class InstallerCommand extends Command {
 	 * @return void
 	 * @throws \Safe\Exceptions\FilesystemException
 	 */
-	public function handle() {
+	public function handle()
+	{
 
 		if (posix_getuid() !== 0) {
 			$this->line('You must run the installer as root.');
@@ -81,7 +87,8 @@ class InstallerCommand extends Command {
 		$this->info('Core installation completed!');
 	}
 
-	private function updateSystem(IPackageManager $pkg) {
+	private function updateSystem(IPackageManager $pkg)
+	{
 
 		$this->info('Updating packages...');
 		if (!$pkg->update() || !$pkg->upgrade()) {
@@ -92,7 +99,8 @@ class InstallerCommand extends Command {
 		$this->warn('Done.');
 	}
 
-	private function installDBMS(IPackageManager $pkg) {
+	private function installDBMS(IPackageManager $pkg)
+	{
 		$this->info('Installing MariaDB...');
 		if (!$pkg->install(['mariadb-server', 'mariadb-client'])) {
 			$this->error('Error during MariaDB installation.');
@@ -106,52 +114,50 @@ class InstallerCommand extends Command {
 	 * @return array
 	 * @throws \Safe\Exceptions\FilesystemException
 	 */
-	private function configureDBMS() {
+	private function configureDBMS()
+	{
 		$password = $this->secret('Insert new MariaDB password for "root". (Empty for generate): ');
 		if ($password === null) {
 			$password = str_random(16);
 		}
-
-		// secure install and set root password
-		$this->info('Securing installation...');
-		$proc = Process::fromShellCommandline('mysql_secure_installation');
-		$proc->setPty(true);
-		$proc->setInput("\ny\n{$password}\n{$password}\ny\ny\ny\ny\n");
-		$proc->run();
-
 		$this->info('Configuring services...');
 
-		$myDotConf = '/etc/mysql/mariadb.conf.d/50-server.cnf';
-		if (!file_exists($myDotConf)) {
-			$myDotConf = '/etc/mysql/my.cnf';
-		}
+		config()->set('database.connections.root.password', $password);
 
-		$content = file_get_contents($myDotConf);
+		$rootConn = DB::connection('root');
 
-		umask(0644);
+		$rootConn->statement("UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user='root'");
 
-		// bind mysql on all interfaces
-		preg_replace('/^(bind-address)/m', '#bind-address', $content, 1);
+		// set root password
+		$rootConn->statement("UPDATE mysql.user SET password=PASSWORD(?) WHERE user='root'", [$password]);
 
-		file_put_contents($myDotConf, $content);
+		// remove anonymous users
+		$rootConn->statement("DELETE FROM mysql.user WHERE user=''");
 
-		// password authentication method in MariaDB to native
-		Process::fromShellCommandline("mysql -uroot -p{$password} -e \"update mysql.user set plugin = 'mysql_native_password' where user='root';\"")->run();
+		// disallow root remote login
+		$rootConn->statement("DELETE FROM mysql.user WHERE user='root' AND host NOT IN ('localhost', '127.0.0.1', '::1')");
+
+		// drop tests databases
+		$rootConn->statement("DROP DATABASE IF EXISTS test");
+		$rootConn->statement("DELETE FROM mysql.db WHERE db='test' OR db='test\\_%'");
+
+		// reload perms
+		$rootConn->statement("FLUSH PRIVILEGES");
+
+		$appName = config('app.name');
+		File::put("/etc/mysql/mariadb.conf.d/00-{$appName}-overrides.cnf", View::make('templates.mariadb.overrides'));
+		File::chmod("/etc/mysql/mariadb.conf.d/00-{$appName}-overrides.cnf", 0644);
 
 		$this->info('Configure open file limit...');
 
 		//security file
-		$openFileLimit = "\nmysql soft nofile 65535\nmysql hard nofile 65535";
-		file_put_contents('/etc/security/limits.conf', $openFileLimit, FILE_APPEND);
+		File::append('/etc/security/limits.conf', View::make('templates.mariadb.limits'));
 
 		// systemd config
-		$openFileLimit = "[Service]\nLimitNOFILE=infinity";
-		if (!file_exists('/etc/systemd/system/mysql.service.d/')) {
-			mkdir('/etc/systemd/system/mysql.service.d/', 0755, true);
-		}
-		file_put_contents('/etc/systemd/system/mysql.service.d/limits.conf', $openFileLimit);
+		File::put('/etc/systemd/system/mysql.service.d/limits.conf', View::make('templates.mariadb.systemd_limits'));
+		File::chmod('/etc/systemd/system/mysql.service.d/limits.conf',0644);
 
-		$this->info('Restart service...');
+		$this->info('Restart services...');
 		Process::fromShellCommandline('systemctl daemon-reload && systemctl restart mysql')->run();
 
 		$this->warn('Done.');
@@ -164,7 +170,8 @@ class InstallerCommand extends Command {
 	 * @param $dbmsPassword
 	 * @throws \Safe\Exceptions\FilesystemException
 	 */
-	private function configurePanel($hostname, $dbmsPassword) {
+	private function configurePanel($hostname, $dbmsPassword)
+	{
 
 		// create database
 		$stardustPassword = str_random(16);
