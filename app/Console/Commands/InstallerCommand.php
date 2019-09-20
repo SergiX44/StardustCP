@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
-use function Safe\file_get_contents;
-use function Safe\file_put_contents;
 use Symfony\Component\Process\Process;
 
 class InstallerCommand extends Command
@@ -65,7 +63,7 @@ class InstallerCommand extends Command
 		$pkg = $env->getPackageManager();
 		$this->info("Your package manager is '{$pkg->name()}'.");
 
-		$hostname = trim(file_get_contents('/etc/hostname'));
+		$hostname = trim(File::get('/etc/hostname'));
 
 		$result = $this->confirm("The system hostname is '{$hostname}'. It's correct?", true);
 		if (!$result) {
@@ -75,15 +73,24 @@ class InstallerCommand extends Command
 
 		$this->updateSystem($pkg);
 		$this->installDBMS($pkg);
-		$dbmsPassword = $this->configureDBMS();
-		$this->configurePanel($hostname, $dbmsPassword);
+
+		$rootPassword = $this->secret('Insert new DBMS password for "root". (Empty for generate): ');
+		if ($rootPassword === null) {
+			$rootPassword = str_random(16);
+		}
+		config()->set('database.connections.root.password', $rootPassword);
+
+		$this->configureDBMS($rootPassword);
+		$this->configurePanel($hostname);
 
 		Artisan::call('key:generate');
 		Artisan::call('migrate', ['--force' => '']);
 		Artisan::call('optimize');
 
-		$this->warn("MySQL root password: {$dbmsPassword}");
+		File::put('.root_db', $rootPassword);
+		File::chmod('.root_db', 0400);
 
+		$this->warn("DBMS root password: {$rootPassword}");
 		$this->info('Core installation completed!');
 	}
 
@@ -111,21 +118,16 @@ class InstallerCommand extends Command
 	}
 
 	/**
-	 * @return array
-	 * @throws \Safe\Exceptions\FilesystemException
+	 * @param $password
+	 * @return void
 	 */
-	private function configureDBMS()
+	private function configureDBMS($password)
 	{
-		$password = $this->secret('Insert new MariaDB password for "root". (Empty for generate): ');
-		if ($password === null) {
-			$password = str_random(16);
-		}
-		$this->info('Configuring services...');
-
-		config()->set('database.connections.root.password', $password);
+		$this->info('Configuring DBMS...');
 
 		$rootConn = DB::connection('root');
 
+		// set native password plugin
 		$rootConn->statement("UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user='root'");
 
 		// set root password
@@ -144,6 +146,8 @@ class InstallerCommand extends Command
 		// reload perms
 		$rootConn->statement("FLUSH PRIVILEGES");
 
+		DB::disconnect();
+
 		$appName = config('app.name');
 		File::put("/etc/mysql/mariadb.conf.d/00-{$appName}-overrides.cnf", View::make('templates.mariadb.overrides'));
 		File::chmod("/etc/mysql/mariadb.conf.d/00-{$appName}-overrides.cnf", 0644);
@@ -155,53 +159,32 @@ class InstallerCommand extends Command
 
 		// systemd config
 		File::put('/etc/systemd/system/mysql.service.d/limits.conf', View::make('templates.mariadb.systemd_limits'));
-		File::chmod('/etc/systemd/system/mysql.service.d/limits.conf',0644);
+		File::chmod('/etc/systemd/system/mysql.service.d/limits.conf', 0644);
 
 		$this->info('Restart services...');
 		Process::fromShellCommandline('systemctl daemon-reload && systemctl restart mysql')->run();
 
 		$this->warn('Done.');
-
-		return $password;
 	}
 
 	/**
 	 * @param $hostname
-	 * @param $dbmsPassword
-	 * @throws \Safe\Exceptions\FilesystemException
 	 */
-	private function configurePanel($hostname, $dbmsPassword)
+	private function configurePanel($hostname)
 	{
-
 		// create database
 		$stardustPassword = str_random(16);
 
-		Process::fromShellCommandline("mysql -uroot -p{$dbmsPassword} -e \"CREATE DATABASE stardust /*\!40100 DEFAULT CHARACTER SET utf8 */;\"")->run();
-		Process::fromShellCommandline("mysql -uroot -p{$dbmsPassword} -e \"CREATE USER stardust@localhost IDENTIFIED BY '{$stardustPassword}';\"")->run();
-		Process::fromShellCommandline("mysql -uroot -p{$dbmsPassword} -e \"GRANT ALL PRIVILEGES ON stardust.* TO 'stardust'@'localhost';\"")->run();
-		Process::fromShellCommandline("mysql -uroot -p{$dbmsPassword} -e \"FLUSH PRIVILEGES;\"")->run();
+		$rootConn = DB::connection('root');
+		$rootConn->statement('CREATE DATABASE stardust CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+		$rootConn->statement('CREATE USER stardust@localhost IDENTIFIED BY ?', [$stardustPassword]);
+		$rootConn->statement("GRANT ALL PRIVILEGES ON stardust.* TO 'stardust'@'localhost'");
+		$rootConn->statement("FLUSH PRIVILEGES");
+		DB::disconnect();
 
-		$dotEnv = <<< ENV
-APP_ENV=production
-APP_KEY=
-APP_DEBUG=false
-APP_URL=http://{$hostname}:8443
-
-LOG_CHANNEL=daily
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=stardust
-DB_USERNAME=stardust
-DB_PASSWORD="{$stardustPassword}"
-
-BROADCAST_DRIVER=pusher
-CACHE_DRIVER=file
-QUEUE_CONNECTION=database
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-ENV;
-		file_put_contents('.env', $dotEnv);
-
+		File::put('.env', View::make('templates.core.env', [
+			'hostname' => $hostname,
+			'password' => $stardustPassword
+		]));
 	}
 }

@@ -10,7 +10,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=stardust
 DB_USERNAME=stardust
-DB_PASSWORD="{{ $stardustPassword }}"
+DB_PASSWORD="{{ $password }}"
 
 BROADCAST_DRIVER=pusher
 CACHE_DRIVER=file
