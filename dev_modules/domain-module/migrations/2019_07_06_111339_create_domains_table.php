@@ -19,7 +19,7 @@ class CreateDomainsTable extends Migration
 	        $table->string('name');
 	        $table->string('extension')->nullable();
 	        $table->boolean('is_sld')->default(false);
-	        $table->bigIncrements('parent_domain')->nullable();
+	        $table->unsignedBigInteger('parent_domain')->nullable();
 	        $table->unsignedInteger('used_count')->default(0);
 	        $table->timestamps();
 
