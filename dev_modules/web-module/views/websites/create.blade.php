@@ -51,9 +51,9 @@
 
                                 @form_input(['name' => 'domain_value', 'label' => 'Domain or Subdomain Name'])
 
-                                @form_select(['name' => 'ipv4', 'label' => 'IPv4', 'options' => []])
+                                @form_select(['name' => 'ipv4', 'label' => 'IPv4', 'options' => $ipv4])
 
-                                @form_select(['name' => 'ipv6', 'label' => 'IPv6', 'options' => []])
+                                @form_select(['name' => 'ipv6', 'label' => 'IPv6', 'options' => $ipv6])
 
                                 @form_switch(['name' => 'php_enabled', 'label' => 'PHP Enabled'])
 

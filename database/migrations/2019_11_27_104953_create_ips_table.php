@@ -16,7 +16,7 @@ class CreateIPSTable extends Migration
         Schema::create('system_ips', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('address', 45);
-            $table->enum('type', ['IPv4', 'IPv6']);
+            $table->enum('type', ['ipv4', 'ipv6']);
             $table->timestamps();
         });
     }

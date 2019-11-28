@@ -14,7 +14,11 @@ class IPController extends Controller
      */
     public function index()
     {
-        //
+        $ips = IP::paginate(25);
+
+        return view('ip.index', [
+            'ips' => $ips
+        ]);
     }
 
     /**
@@ -24,18 +28,30 @@ class IPController extends Controller
      */
     public function create()
     {
-        //
+        return view('ip.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'type' => 'required',
+            'address' => $request->get('type', 'ipv4')
+        ]);
+
+        $ip = new IP();
+        $ip->fill($request->all());
+        $ip->save();
+
+        session()->flash('status', ['success' => 'IP address added.']);
+
+        return redirect()->route('core.ip.index');
     }
 
     /**

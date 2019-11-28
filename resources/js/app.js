@@ -5,3 +5,16 @@
  */
 
 require('./bootstrap');
+
+const app = {
+    init: () => {
+    
+    },
+    run: () => {
+        
+        console.log('Application ready.')
+    }
+};
+
+app.init();
+$(document).ready(app.run);
