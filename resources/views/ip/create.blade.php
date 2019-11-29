@@ -15,15 +15,15 @@
                     <form method="post" action="{{ route('core.ip.store') }}">
                         @csrf
 
-                        @form_radio([
+                        @formRadio([
                         'name' => 'type',
                         'label' => 'Type',
                         'items' => [['value' => 'ipv4', 'text' => 'IPv4', 'active' => true], ['value' => 'ipv6', 'text' => 'IPv6']],
                         ])
 
-                        @form_input(['name' => 'address', 'label' => 'IP Address'])
+                        @formInput(['name' => 'address', 'label' => 'IP Address'])
 
-                        @form_submit(['cancel' => 'core.ip.index'])
+                        @formSubmit(['cancel' => 'core.ip.index'])
                     </form>
                 </div>
             </div>

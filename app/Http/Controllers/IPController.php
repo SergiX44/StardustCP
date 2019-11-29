@@ -40,9 +40,10 @@ class IPController extends Controller
      */
     public function store(Request $request)
     {
+        $type = ($request->get('type') === 'ipv6') ? 'ipv6' : 'ipv4';
         $this->validate($request, [
             'type' => 'required',
-            'address' => $request->get('type', 'ipv4')
+            'address' => 'required|unique:system_ips,address|'.$type
         ]);
 
         $ip = new IP();
@@ -57,7 +58,7 @@ class IPController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param IP $ip
+     * @param  IP  $ip
      * @return void
      */
     public function show(IP $ip)
@@ -79,8 +80,8 @@ class IPController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param IP $ip
+     * @param  \Illuminate\Http\Request  $request
+     * @param  IP  $ip
      * @return void
      */
     public function update(Request $request, IP $ip)
@@ -91,7 +92,7 @@ class IPController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param IP $ip
+     * @param  IP  $ip
      * @return void
      */
     public function destroy(IP $ip)

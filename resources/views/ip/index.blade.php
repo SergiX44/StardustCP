@@ -26,16 +26,16 @@
                                 <th></th>
                             </tr>
                             @foreach($ips as $ip)
-                            <tr>
-                                <td>{{ $ip->id }}</td>
-                                <td>{{ $ip->type }}</td>
-                                <td>{{ $ip->address }}</td>
-                                <td>{{ $ip->created_at }}</td>
-                                <td class="text-right">
-                                    <a href="#" class="btn btn-warning"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                    <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ $ip->id }}</td>
+                                    <td>{{ $ip->type === 'ipv4' ? 'IPv4' : 'IPv6' }}</td>
+                                    <td>{{ $ip->address }}</td>
+                                    <td>{{ $ip->created_at }}</td>
+                                    <td class="text-right">
+                                        <a href="#" class="btn btn-warning"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>
