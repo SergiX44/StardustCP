@@ -3,6 +3,7 @@
 namespace Modules\Web\Controllers;
 
 use Core\Http\Controllers\Controller;
+use Core\Models\IP;
 use Illuminate\Http\Request;
 
 class WebsitesController extends Controller
@@ -14,7 +15,7 @@ class WebsitesController extends Controller
      */
     public function index()
     {
-	    return view('web::websites.index');
+        return view('web::websites.index');
     }
 
     /**
@@ -24,7 +25,26 @@ class WebsitesController extends Controller
      */
     public function create()
     {
-        return view('web::websites.create');
+        $ipv4 = IP::select('id', 'address')
+            ->where('type', 'ipv4')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id => $item->address];
+            });
+
+        $ipv6 = IP::select('id', 'address')
+            ->where('type', 'ipv6')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id => $item->address];
+            });
+
+        $ipv6->prepend('(Not set)', '');
+
+        return view('web::websites.create', [
+            'ipv4' => $ipv4,
+            'ipv6' => $ipv6,
+        ]);
     }
 
     /**

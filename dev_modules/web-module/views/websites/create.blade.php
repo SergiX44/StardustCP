@@ -34,13 +34,13 @@
                         </ul>
                         <div class="tab-content" id="myTabContent2">
                             <div class="tab-pane fade show active" id="webspace">
-                                @form_radio([
-                                'name' => 'is_domain',
+                                @formRadio([
+                                'name' => 'type',
                                 'label' => 'From',
-                                'items' => [['value' => 'true', 'text' => 'Domain', 'active' => true], ['value' => 'false', 'text' => 'Subdomain']],
+                                'items' => [['value' => 'domain', 'text' => 'Domain', 'active' => true], ['value' => 'subdomain', 'text' => 'Subdomain']],
                                 ])
 
-                                @form_select([
+                                @formSelect([
                                 'label' => 'Parent Domain',
                                 'name' => 'parent_domain',
                                 'options' => [
@@ -49,15 +49,15 @@
                                 ]
                                 ])
 
-                                @form_input(['name' => 'domain_value', 'label' => 'Domain or Subdomain Name'])
+                                @formInput(['name' => 'domain_value', 'label' => 'Domain or Subdomain Name'])
 
-                                @form_select(['name' => 'ipv4', 'label' => 'IPv4', 'options' => []])
+                                @formSelect(['name' => 'ipv4', 'label' => 'IPv4', 'options' => $ipv4])
 
-                                @form_select(['name' => 'ipv6', 'label' => 'IPv6', 'options' => []])
+                                @formSelect(['name' => 'ipv6', 'label' => 'IPv6', 'options' => $ipv6])
 
-                                @form_switch(['name' => 'php_enabled', 'label' => 'PHP Enabled'])
+                                @formSwitch(['name' => 'php_enabled', 'label' => 'PHP Enabled'])
 
-                                @form_switch(['name' => 'ssl_enabled', 'label' => 'SSL Enabled', 'checked' => true])
+                                @formSwitch(['name' => 'ssl_enabled', 'label' => 'SSL Enabled', 'checked' => true])
                             </div>
                             <div class="tab-pane fade" id="webserver-conf">
                                 Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui.
@@ -67,7 +67,7 @@
                             </div>
                         </div>
 
-                        @form_submit(['cancel' => 'web.websites.index'])
+                        @formSubmit(['cancel' => 'web.websites.index'])
                     </form>
                 </div>
             </div>

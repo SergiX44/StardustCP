@@ -14,7 +14,11 @@ class IPController extends Controller
      */
     public function index()
     {
-        //
+        $ips = IP::paginate(25);
+
+        return view('ip.index', [
+            'ips' => $ips
+        ]);
     }
 
     /**
@@ -24,24 +28,37 @@ class IPController extends Controller
      */
     public function create()
     {
-        //
+        return view('ip.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
-        //
+        $type = ($request->get('type') === 'ipv6') ? 'ipv6' : 'ipv4';
+        $this->validate($request, [
+            'type' => 'required',
+            'address' => 'required|unique:system_ips,address|'.$type
+        ]);
+
+        $ip = new IP();
+        $ip->fill($request->all());
+        $ip->save();
+
+        session()->flash('status', ['success' => 'IP address added.']);
+
+        return redirect()->route('core.ip.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param IP $ip
+     * @param  IP  $ip
      * @return void
      */
     public function show(IP $ip)
@@ -63,8 +80,8 @@ class IPController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param IP $ip
+     * @param  \Illuminate\Http\Request  $request
+     * @param  IP  $ip
      * @return void
      */
     public function update(Request $request, IP $ip)
@@ -75,7 +92,7 @@ class IPController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param IP $ip
+     * @param  IP  $ip
      * @return void
      */
     public function destroy(IP $ip)

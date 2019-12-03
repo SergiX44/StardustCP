@@ -38,10 +38,10 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	private function setupBladeAliases()
 	{
-		Blade::include('layouts.form.input', 'form_input');
-		Blade::include('layouts.form.submit', 'form_submit');
-		Blade::include('layouts.form.radiobtn', 'form_radio');
-		Blade::include('layouts.form.select', 'form_select');
-		Blade::include('layouts.form.switch', 'form_switch');
+		Blade::include('layouts.form.input', 'formInput');
+		Blade::include('layouts.form.submit', 'formSubmit');
+		Blade::include('layouts.form.radiobtn', 'formRadio');
+		Blade::include('layouts.form.select', 'formSelect');
+		Blade::include('layouts.form.switch', 'formSwitch');
 	}
 }

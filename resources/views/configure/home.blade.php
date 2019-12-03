@@ -10,18 +10,18 @@
 @section('body')
     <div class="row">
         <div class="col-12">
-            <h2 class="section-title">Main Configuration</h2>
+            <h2 class="section-title">Core Configuration</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
             <div class="card card-large-icons">
                 <div class="card-icon bg-primary text-white">
-                    <i class="fas fa-network-wired"></i>
+                    <i class="fas fa-ethernet"></i>
                 </div>
                 <div class="card-body">
-                    <h4>IP Adresses</h4>
-                    <p>The system IP adresses.</p>
+                    <h4>IP Addresses</h4>
+                    <p>The system IP addresses.</p>
                     <a href="{{ route('core.ip.index') }}" class="card-cta">Configure <i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>

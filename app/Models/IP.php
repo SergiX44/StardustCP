@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class IP extends Model
 {
     protected $table = 'system_ips';
+
+    protected $fillable = [
+      'type', 'address'
+    ];
 }
