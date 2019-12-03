@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\Process\Process;
 
-class InstallerCommand extends Command
+class CoreInstallCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -41,7 +41,7 @@ class InstallerCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      * @throws \Safe\Exceptions\FilesystemException
      */
     public function handle()
@@ -49,7 +49,7 @@ class InstallerCommand extends Command
 
         if (posix_getuid() !== 0) {
             $this->line('You must run the installer as root.');
-            exit(1);
+            return 1;
         }
 
         $env = OS::recognize();
@@ -57,14 +57,14 @@ class InstallerCommand extends Command
         $result = $this->confirm("Detected {$env->getPrettyName()}. It's correct?", true);
         if (!$result) {
             $this->error('Cannot detect you system.');
-            exit(1);
+            return 1;
         }
 
         $hostname = trim(File::get('/etc/hostname'));
         $result = $this->confirm("The system hostname is '{$hostname}'. It's correct?", true);
         if (!$result) {
             $this->error('Wrong hostname, aborting.');
-            exit(1);
+            return 1;
         }
 
         $rootPassword = $this->secret('Insert new DBMS password for "root". (Empty for generate): ');
@@ -97,6 +97,8 @@ class InstallerCommand extends Command
 
         $this->warn("DBMS root password: {$rootPassword}");
         $this->info('Core installation completed!');
+
+        return 0;
     }
 
     private function updateSystem(IPackageManager $pkg)
@@ -160,7 +162,7 @@ class InstallerCommand extends Command
 
         $this->info('Configure open file limit...');
 
-        //security file
+        // security file
         File::append('/etc/security/limits.conf', View::make('templates.mariadb.limits'));
 
         // systemd config
@@ -183,22 +185,23 @@ class InstallerCommand extends Command
     {
         // create database
         $this->info('Configuring control panel...');
-        $stardustPassword = str_random(16);
+        $password = str_random(16);
+        $slug = str_slug(config('app.name'));
 
         $rootConn = DB::reconnect('root');
-        $rootConn->statement('CREATE DATABASE IF NOT EXISTS stardust CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
-        $rootConn->statement("CREATE USER IF NOT EXISTS 'stardust'@'localhost' IDENTIFIED BY ".$rootConn->getPdo()->quote($stardustPassword));
-        $rootConn->statement("GRANT ALL PRIVILEGES ON stardust.* TO 'stardust'@'localhost'");
+        $rootConn->statement("CREATE DATABASE IF NOT EXISTS $slug CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        $rootConn->statement("CREATE USER IF NOT EXISTS '$slug'@'localhost' IDENTIFIED BY ".$rootConn->getPdo()->quote($password));
+        $rootConn->statement("GRANT ALL PRIVILEGES ON $slug.* TO '$slug'@'localhost'");
         $rootConn->statement('FLUSH PRIVILEGES');
         DB::disconnect();
 
         File::put('.env', View::make('templates.core.env', [
             'hostname' => $hostname,
-            'password' => $stardustPassword,
+            'password' => $password,
             'connectionName' => 'app',
         ]));
 
-        config()->set('database.connections.app.password', $stardustPassword);
+        config()->set('database.connections.app.password', $password);
 
         $this->warn('Done.');
     }

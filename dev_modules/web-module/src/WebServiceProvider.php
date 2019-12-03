@@ -4,6 +4,7 @@ namespace Modules\Web;
 
 use Core\Modules\ModuleManager;
 use Illuminate\Support\ServiceProvider;
+use Modules\Web\Commands\InstallCommand;
 
 class WebServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,10 @@ class WebServiceProvider extends ServiceProvider
 			$this->publishes([
 				__DIR__ . '/../config/config.php' => config_path('web-module.php'),
 			], 'web-module');
+
+            $this->commands([
+                InstallCommand::class
+            ]);
 		}
 	}
 }
