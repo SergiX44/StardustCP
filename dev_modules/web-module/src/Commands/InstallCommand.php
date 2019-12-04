@@ -5,6 +5,9 @@ namespace Modules\Web\Commands;
 use Core\Environment\OS;
 use Core\Environment\PackageManagers\IPackageManager;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -59,13 +62,16 @@ class InstallCommand extends Command
         $this->installWebServer($pkg);
         $this->configureWebServer($pkg);
 
+        $this->createPanelVirtualHost();
+        $this->createDefaultVirtualHost();
+
         return 0;
     }
 
     protected function installWebServer(?IPackageManager $pkg)
     {
         $this->info('Installing Apache and packages...');
-        if (!$pkg->install(['apache2'])) {
+        if (!$pkg->install(['apache2', 'apache2-doc', 'apache2-utils', 'apache2-suexec-pristine'])) {
             $this->error('Error during Apache installation.');
             $this->error($pkg->getLastStdOut());
             exit(1);
@@ -75,5 +81,24 @@ class InstallCommand extends Command
 
     protected function configureWebServer(?IPackageManager $pkg)
     {
+        $this->info('Configuring Apache...');
+        Process::fromShellCommandline('a2enmod suexec rewrite ssl actions include dav_fs dav auth_digest cgi headers actions proxy_fcgi alias http2')->run();
+
+        File::put('/etc/apache2/conf-available/httpoxy.conf', View::make('web::templates.apache.httpoxy'));
+
+        Process::fromShellCommandline('a2enconf httpoxy')->run();
+        Process::fromShellCommandline('systemctl restart apache2')->run();
+
+        $this->warn('Done.');
+    }
+
+    protected function createPanelVirtualHost()
+    {
+
+    }
+
+    protected function createDefaultVirtualHost()
+    {
+
     }
 }
