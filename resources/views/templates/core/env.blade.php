@@ -2,14 +2,14 @@
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_URL=http://{{ $hostname }}:8443
+APP_URL=http://{{ $hostname }}:{{ $port }}
 
 LOG_CHANNEL=daily
 DB_CONNECTION={{ $connectionName }}
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=stardust
-DB_USERNAME=stardust
+DB_DATABASE={{ $db }}
+DB_USERNAME={{ $username }}
 DB_PASSWORD="{{ $password }}"
 
 BROADCAST_DRIVER=pusher

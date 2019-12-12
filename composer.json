@@ -26,17 +26,17 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "ext-pdo": "*",
         "ext-posix": "*",
         "fideloper/proxy": "^4.0",
+        "hunternnm/laravel-roadrunner": "^2.0",
         "laravel/framework": "^6.0",
         "laravel/helpers": "^1.1",
         "laravel/tinker": "^1.0",
+        "spiral/roadrunner": "^1.5",
         "stardustcp/database-module": "^1.0",
         "stardustcp/web-module": "^1.0",
-        "symfony/process": "^4.3",
-        "ext-pdo": "*",
-        "hunternnm/laravel-roadrunner": "^2.0",
-        "spiral/roadrunner": "^1.5"
+        "symfony/process": "^4.3"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

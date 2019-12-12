@@ -78,8 +78,10 @@ class CoreInstallCommand extends Command
         $this->updateSystem($pkg);
         $this->installDBMS($pkg);
         $this->configureDBMS($rootPassword);
+        $this->configureRoadRunner();
 
         config()->set('database.connections.root.password', $rootPassword);
+
         File::put('.root_db', $rootPassword);
         File::chmod('.root_db', 0400);
 
@@ -196,12 +198,41 @@ class CoreInstallCommand extends Command
         DB::disconnect();
 
         File::put('.env', View::make('templates.core.env', [
+            'db' => $slug,
+            'username' => $slug,
             'hostname' => $hostname,
             'password' => $password,
             'connectionName' => 'app',
+            'port' => 8000
         ]));
 
+        config()->set('database.connections.app.host', $hostname);
+        config()->set('database.connections.app.username', $slug);
         config()->set('database.connections.app.password', $password);
+        config()->set('database.connections.app.database', $slug);
+
+        $this->warn('Done.');
+    }
+
+    private function configureRoadRunner()
+    {
+        $this->info('Configuring application server...');
+        Process::fromShellCommandline('vendor/bin/rr get', base_path());
+        $slug = str_slug(config('app.name'));
+
+        $baseDir = base_path();
+        Process::fromShellCommandline("useradd -d {$baseDir} {$slug}");
+
+        File::put("/etc/systemd/system/$slug.service", View::make('templates.roadrunner.rr-service', [
+            'user' => $slug,
+            'group' => $slug,
+            'workingPath' => $baseDir,
+            'rrPath' => base_path('rr')
+        ]));
+
+        Process::fromShellCommandline("systemctl daemon-reload");
+        Process::fromShellCommandline("systemctl enable {$slug}");
+        Process::fromShellCommandline("systemctl start {$slug}");
 
         $this->warn('Done.');
     }

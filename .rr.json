@@ -4,7 +4,7 @@
 		"listen": "tcp://127.0.0.1:6001"
 	},
 	"http": {
-		"address": "0.0.0.0:8443",
+		"address": "0.0.0.0:8000",
 		"fcgi": null,
 		"http2": null,
 		"maxRequestSize": 128,
