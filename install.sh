@@ -12,6 +12,12 @@ apt install -y php-cli php-curl php-mysql php-mbstring php-xml php-zip
 
 echo "Starting installer..."
 
+## TODO: remove, dev purpose
+rm .env
+rm -rf .root_db
+rm rr
+##
+
 php artisan auto-install
 
 exit 0

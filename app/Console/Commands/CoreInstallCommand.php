@@ -97,6 +97,8 @@ class CoreInstallCommand extends Command
 
         Artisan::call('optimize');
 
+        Process::fromShellCommandline('systemctl start '.str_slug(config('app.name')))->run();
+
         $this->warn("DBMS root password: {$rootPassword}");
         $this->info('Core installation completed!');
 
@@ -217,11 +219,11 @@ class CoreInstallCommand extends Command
     private function configureRoadRunner()
     {
         $this->info('Configuring application server...');
-        Process::fromShellCommandline('./vendor/bin/rr get', base_path());
+        Process::fromShellCommandline(base_path('vendor/bin/rr').' get', base_path())->run();
         $slug = str_slug(config('app.name'));
 
         $baseDir = base_path();
-        Process::fromShellCommandline("useradd -d {$baseDir} {$slug}");
+        Process::fromShellCommandline("useradd -d {$baseDir} {$slug}")->run();
 
         File::put("/etc/systemd/system/$slug.service", View::make('templates.roadrunner.rr-service', [
             'user' => $slug,
@@ -230,9 +232,10 @@ class CoreInstallCommand extends Command
             'rrPath' => base_path('rr')
         ]));
 
-        Process::fromShellCommandline("systemctl daemon-reload");
-        Process::fromShellCommandline("systemctl enable {$slug}");
-        Process::fromShellCommandline("systemctl start {$slug}");
+        Process::fromShellCommandline("chown -R {$slug} ".base_path())->run();
+
+        Process::fromShellCommandline("systemctl daemon-reload")->run();
+        Process::fromShellCommandline("systemctl enable {$slug}")->run();
 
         $this->warn('Done.');
     }

@@ -27,7 +27,6 @@
         "php": "^7.2",
         "ext-json": "*",
         "ext-pdo": "*",
-        "ext-posix": "*",
         "fideloper/proxy": "^4.0",
         "hunternnm/laravel-roadrunner": "^2.0",
         "laravel/framework": "^6.0",
@@ -48,7 +47,8 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "bin-compat": "full"
     },
     "extra": {
         "laravel": {

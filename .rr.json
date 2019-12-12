@@ -25,7 +25,7 @@
 			"fe80::/10"
 		],
 		"workers": {
-			"command": "php vendor/bin/roadrunner-worker",
+			"command": "php vendor/hunternnm/laravel-roadrunner/bin/roadrunner-worker",
 			"relay": "pipes",
 			"pool": {
 				"numWorkers": 1,
