@@ -206,10 +206,10 @@ class CoreInstallCommand extends Command
             'port' => 8000
         ]));
 
-        config()->set('database.connections.app.host', $hostname);
         config()->set('database.connections.app.username', $slug);
         config()->set('database.connections.app.password', $password);
         config()->set('database.connections.app.database', $slug);
+        DB::reconnect('app');
 
         $this->warn('Done.');
     }
@@ -217,7 +217,7 @@ class CoreInstallCommand extends Command
     private function configureRoadRunner()
     {
         $this->info('Configuring application server...');
-        Process::fromShellCommandline('vendor/bin/rr get', base_path());
+        Process::fromShellCommandline('./vendor/bin/rr get', base_path());
         $slug = str_slug(config('app.name'));
 
         $baseDir = base_path();
