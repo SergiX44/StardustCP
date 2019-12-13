@@ -232,7 +232,7 @@ class CoreInstallCommand extends Command
             'rrPath' => base_path('rr')
         ]));
 
-        Process::fromShellCommandline("chown -R {$slug} ".base_path())->run();
+        Process::fromShellCommandline("chown -R {$slug} ".base_path(), null, null, null, null)->run();
 
         Process::fromShellCommandline("systemctl daemon-reload")->run();
         Process::fromShellCommandline("systemctl enable {$slug}")->run();

@@ -1,66 +1,73 @@
 {
-	"rpc": {
-		"enable": true,
-		"listen": "tcp://127.0.0.1:6001"
-	},
-	"http": {
-		"address": "0.0.0.0:8000",
-		"fcgi": null,
-		"http2": null,
-		"maxRequestSize": 128,
-		"uploads": {
-			"forbid": [
-				".php",
-				".exe",
-				".bat"
-			]
-		},
-		"trustedSubnets": [
-			"10.0.0.0/8",
-			"127.0.0.0/8",
-			"172.16.0.0/12",
-			"192.168.0.0/16",
-			"::1/128",
-			"fc00::/7",
-			"fe80::/10"
-		],
-		"workers": {
-			"command": "php vendor/hunternnm/laravel-roadrunner/bin/roadrunner-worker",
-			"relay": "pipes",
-			"pool": {
-				"numWorkers": 1,
-				"maxJobs": 16,
-				"allocateTimeout": 30,
-				"destroyTimeout": 30
-			}
-		}
-	},
-	"headers": {
-		"cors": {
-			"allowedOrigin": "*",
-			"allowedHeaders": "*",
-			"allowedMethods": "GET,POST,PUT,DELETE,HEAD,OPTIONS",
-			"allowCredentials": true,
-			"exposedHeaders": "Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma",
-			"maxAge": 600
-		}
-	},
-	"limit": {
-		"interval": 1,
-		"services": {
-			"http": {
-				"maxMemory": 128,
-				"TTL": 0,
-				"idleTTL": 0,
-				"execTTL": 60
-			}
-		}
-	},
-	"static": {
-		"enable": true,
-		"dir": "public",
-		"forbid": [
-			".php"
-		]
-	}
+    "rpc": {
+        "enable": true,
+        "listen": "tcp://127.0.0.1:6001"
+    },
+    "http": {
+        "address": "0.0.0.0:8080",
+        "http2.h2c": true,
+        "fcgi": null,
+        "http2": {
+            "enabled": false,
+            "maxConcurrentStreams": 64
+        },
+        "ssl": {
+            "redirect": false
+        },
+        "maxRequestSize": 128,
+        "uploads": {
+            "forbid": [
+                ".php",
+                ".exe",
+                ".bat"
+            ]
+        },
+        "trustedSubnets": [
+            "10.0.0.0/8",
+            "127.0.0.0/8",
+            "172.16.0.0/12",
+            "192.168.0.0/16",
+            "::1/128",
+            "fc00::/7",
+            "fe80::/10"
+        ],
+        "workers": {
+            "command": "php vendor/hunternnm/laravel-roadrunner/bin/roadrunner-worker",
+            "relay": "pipes",
+            "pool": {
+                "numWorkers": 1,
+                "maxJobs": 16,
+                "allocateTimeout": 30,
+                "destroyTimeout": 30
+            }
+        }
+    },
+    "headers": {
+        "cors": {
+            "allowedOrigin": "*",
+            "allowedHeaders": "*",
+            "allowedMethods": "GET,POST,PUT,DELETE,HEAD,OPTIONS",
+            "allowCredentials": true,
+            "exposedHeaders": "Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma",
+            "maxAge": 600
+        }
+    },
+    "limit": {
+        "interval": 1,
+        "services": {
+            "http": {
+                "maxMemory": 128,
+                "TTL": 0,
+                "idleTTL": 0,
+                "execTTL": 60
+            }
+        }
+    },
+    "static": {
+        "enable": true,
+        "dir": "public",
+        "forbid": [
+            ".php"
+        ]
+    }
 }

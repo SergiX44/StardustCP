@@ -7,8 +7,8 @@ fi
 
 echo "Installing base installer packages..."
 
-apt update
-apt install -y php-cli php-curl php-mysql php-mbstring php-xml php-zip
+apt update >> install.sh.log 2>&1
+apt install -y php-cli php-curl php-mysql php-mbstring php-xml php-zip >> install.sh.log 2>&1
 
 echo "Starting installer..."
 
