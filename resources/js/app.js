@@ -6,15 +6,15 @@
 
 require('./bootstrap');
 
-const app = {
+const core = {
     init: () => {
-    
+
     },
     run: () => {
-        
+
         console.log('Application ready.')
     }
 };
 
-app.init();
-$(document).ready(app.run);
+core.init();
+$(document).ready(core.run);

@@ -35,6 +35,10 @@ mix.scripts([
 mix.copyDirectory('node_modules/stisla/assets/fonts', 'public/fonts/');
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts/');
 
+
+mix.styles('vendor/stardustcp/**/*/assets/css/*.css', 'public/css/modules.css');
+mix.js('vendor/stardustcp/**/assets/js/*.js', 'public/js/modules.js');
+
 if (mix.inProduction()) {
     mix.version();
 }

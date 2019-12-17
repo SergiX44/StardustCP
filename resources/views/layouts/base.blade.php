@@ -12,11 +12,15 @@
     <!-- Styles -->
     <link href="{{ mix('css/vendors.css') }}" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/modules.css') }}" rel="stylesheet">
+    @yield('css')
 </head>
 <body>
 @yield('_body_')
 <!-- Scripts -->
 <script src="{{ mix('js/vendors.js') }}"></script>
 <script src="{{ mix('js/app.js') }}" defer></script>
+<script src="{{ mix('js/modules.js') }}" defer></script>
+@yield('js')
 </body>
 </html>

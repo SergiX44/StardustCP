@@ -8,7 +8,7 @@ fi
 echo "Installing base installer packages..."
 
 apt update >> install.sh.log 2>&1
-apt install -y php-cli php-curl php-mysql php-mbstring php-xml php-zip >> install.sh.log 2>&1
+apt install -y sudo php-cli php-curl php-mysql php-mbstring php-xml php-zip >> install.sh.log 2>&1
 
 echo "Starting installer..."
 
@@ -18,6 +18,6 @@ rm -rf .root_db
 rm rr
 ##
 
-php artisan auto-install
+php artisan auto-install "$@"
 
 exit 0

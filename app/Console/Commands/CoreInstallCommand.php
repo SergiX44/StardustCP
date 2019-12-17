@@ -19,7 +19,7 @@ class CoreInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'auto-install';
+    protected $signature = 'auto-install {--dev-mode}';
 
     /**
      * The console command description.
@@ -52,6 +52,10 @@ class CoreInstallCommand extends Command
             return 1;
         }
 
+        if ($this->option('dev-mode')) {
+            $this->warn('WARNING! INSTALLATION STARTED IN "dev-mode", THIS IS ONLY FOR DEVELOPMENT PURPOSES!');
+        }
+
         $env = OS::recognize();
 
         $result = $this->confirm("Detected {$env->getPrettyName()}. It's correct?", true);
@@ -78,12 +82,7 @@ class CoreInstallCommand extends Command
         $this->updateSystem($pkg);
         $this->installDBMS($pkg);
         $this->configureDBMS($rootPassword);
-        $this->configureRoadRunner();
-
         config()->set('database.connections.root.password', $rootPassword);
-
-        File::put('.root_db', $rootPassword);
-        File::chmod('.root_db', 0400);
 
         $this->configurePanel($hostname);
 
@@ -97,10 +96,26 @@ class CoreInstallCommand extends Command
 
         Artisan::call('optimize');
 
-        Process::fromShellCommandline('systemctl start '.str_slug(config('app.name')))->run();
+        $this->installNode($pkg);
+
+        $this->info('Compiling CSS/JS assets...');
+        Process::fromShellCommandline('npm -g i yarn')->run();
+        Process::fromShellCommandline('yarn install')->run();
+        Process::fromShellCommandline('yarn run '.$this->option('dev-mode') ? 'dev' : 'prod')->run();
+        $this->warn('Done.');
+
+        $this->configureRoadRunner();
+
+        // Saving root password, and make it read-only for the root user
+        File::put('.root_db', $rootPassword);
+        File::chmod('.root_db', 0400);
 
         $this->warn("DBMS root password: {$rootPassword}");
         $this->info('Core installation completed!');
+
+        if ($this->option('dev-mode')) {
+            Artisan::call('db:seed', ['--force' => true]);
+        }
 
         return 0;
     }
@@ -199,14 +214,21 @@ class CoreInstallCommand extends Command
         $rootConn->statement('FLUSH PRIVILEGES');
         DB::disconnect();
 
-        File::put('.env', View::make('templates.core.env', [
+        $params = [
             'db' => $slug,
             'username' => $slug,
             'hostname' => $hostname,
             'password' => $password,
             'connectionName' => 'app',
-            'port' => 8000
-        ]));
+            'port' => 8443
+        ];
+
+        if ($this->option('dev-mode')) {
+            $params['env'] = 'local';
+            $params['debug'] = 'true';
+        }
+
+        File::put('.env', View::make('templates.core.env', $params));
 
         config()->set('database.connections.app.username', $slug);
         config()->set('database.connections.app.password', $password);
@@ -225,6 +247,11 @@ class CoreInstallCommand extends Command
         $baseDir = base_path();
         Process::fromShellCommandline("useradd -d {$baseDir} {$slug}")->run();
 
+        if ($this->option('dev-mode')) {
+            Process::fromShellCommandline("usermod -aG vboxsf {$slug}")->run();
+            Process::fromShellCommandline("usermod -aG root {$slug}")->run();
+        }
+
         File::put("/etc/systemd/system/$slug.service", View::make('templates.roadrunner.rr-service', [
             'user' => $slug,
             'group' => $slug,
@@ -232,11 +259,26 @@ class CoreInstallCommand extends Command
             'rrPath' => base_path('rr')
         ]));
 
-        Process::fromShellCommandline("chown -R {$slug} ".base_path(), null, null, null, null)->run();
+        if (!$this->option('dev-mode')) {
+            Process::fromShellCommandline("chown -R {$slug} ".base_path(), null, null, null, null)->run();
+        }
 
         Process::fromShellCommandline("systemctl daemon-reload")->run();
         Process::fromShellCommandline("systemctl enable {$slug}")->run();
+        Process::fromShellCommandline("systemctl restart {$slug}")->run();
 
+        $this->warn('Done.');
+    }
+
+    private function installNode($pkg)
+    {
+        $this->info('Installing NodeJS...');
+        Process::fromShellCommandline('curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -')->run();
+        if (!$pkg->install(['nodejs'])) {
+            $this->error('Error during MariaDB installation.');
+            $this->error($pkg->getLastStdOut());
+            exit(1);
+        }
         $this->warn('Done.');
     }
 }

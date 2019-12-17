@@ -16,10 +16,17 @@ class Apt implements IPackageManager
     private $env = ['DEBIAN_FRONTEND' => 'noninteractive'];
 
     /**
+     * @var OS
+     */
+    private $os;
+
+    /**
      * Apt constructor.
      * @param  OS  $os
      */
-    public function __construct(OS $os) { }
+    public function __construct(OS $os) {
+        $this->os = $os;
+    }
 
     /**
      * Name of the package manager
@@ -132,5 +139,13 @@ class Apt implements IPackageManager
     public function getLastStdErr()
     {
         return $this->lastStdErr;
+    }
+
+    /**
+     * @return OS
+     */
+    public function getOs(): OS
+    {
+        return $this->os;
     }
 }

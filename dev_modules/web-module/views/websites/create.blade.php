@@ -74,3 +74,7 @@
         </div>
     </div>
 @endsection
+
+@section('js')
+    @parent
+@endsection

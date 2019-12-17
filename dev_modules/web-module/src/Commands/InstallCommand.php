@@ -62,7 +62,6 @@ class InstallCommand extends Command
         $this->installWebServer($pkg);
         $this->configureWebServer($pkg);
 
-        $this->createPanelVirtualHost();
         $this->createDefaultVirtualHost();
 
         return 0;
@@ -71,7 +70,7 @@ class InstallCommand extends Command
     protected function installWebServer(?IPackageManager $pkg)
     {
         $this->info('Installing Apache and packages...');
-        if (!$pkg->install(['apache2', 'apache2-doc', 'apache2-utils', 'apache2-suexec-pristine'])) {
+        if (!$pkg->install(['apache2', 'apache2-doc', 'apache2-utils', 'apache2-suexec-pristine', 'ssl-cert'])) {
             $this->error('Error during Apache installation.');
             $this->error($pkg->getLastStdOut());
             exit(1);
@@ -92,13 +91,13 @@ class InstallCommand extends Command
         $this->warn('Done.');
     }
 
-    protected function createPanelVirtualHost()
-    {
-
-    }
-
     protected function createDefaultVirtualHost()
     {
+        File::deleteDirectory('/var/www/html');
+        File::makeDirectory('/var/www/default');
+        File::put('/var/www/default/index.html', "You shouldn't be here. Get out.");
 
+        File::put('/etc/apache2/sites-available/000-default.conf', View::make('web::templates.apache.default'));
+        Process::fromShellCommandline('systemctl restart apache2')->run();
     }
 }
