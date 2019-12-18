@@ -1,4 +1,4 @@
-<div class="form-group row">
+<div class="form-group row" id="{{ $name }}-entry">
     <label for="{{ $name }}" class="col-sm-3 col-form-label text-md-right">@lang(($label ?? ucfirst($name)))</label>
     <div class="col-md-6">
         <label class="custom-switch mt-2">

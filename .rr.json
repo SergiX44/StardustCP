@@ -50,6 +50,9 @@
             "allowCredentials": true,
             "exposedHeaders": "Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma",
             "maxAge": 600
+        },
+        "response": {
+            "X-Powered-By": "StardustCP"
         }
     },
     "limit": {

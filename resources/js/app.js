@@ -7,10 +7,10 @@
 require('./bootstrap');
 
 const core = {
-    init: () => {
+    init() {
 
     },
-    run: () => {
+    run() {
 
         console.log('Application ready.')
     }

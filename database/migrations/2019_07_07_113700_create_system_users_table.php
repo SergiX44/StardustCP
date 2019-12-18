@@ -15,6 +15,10 @@ class CreateSystemUsersTable extends Migration
     {
         Schema::create('system_users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('user');
+            $table->string('group');
+            $table->string('home_dir');
+            $table->boolean('ssh_enabled')->default(false);
             $table->timestamps();
         });
     }

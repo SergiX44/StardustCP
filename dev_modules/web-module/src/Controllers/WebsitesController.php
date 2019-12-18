@@ -55,7 +55,12 @@ class WebsitesController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $this->validate($request, [
+            'type' => 'in:domain,subdomain',
+            'domain_value' => 'regex:/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/im',
+            'ipv4' => 'required|exists:system_ips,id',
+            'ipv6' => 'present'
+        ]);
     }
 
     /**

@@ -87,22 +87,21 @@ class CoreInstallCommand extends Command
         $this->configurePanel($hostname);
 
         $this->info('Generating app key...');
-        Artisan::call('key:generate', ['--force' => true]);
+        Artisan::call('key:generate', ['--force' => true, '--no-interaction' => true]);
         $this->warn('Done.');
 
         $this->info('Migrating tables...');
-        Artisan::call('migrate', ['--force' => true]);
+        Artisan::call('migrate', ['--force' => true, '--no-interaction' => true]);
         $this->warn('Done.');
 
-        Artisan::call('optimize');
+        if (!$this->option('dev-mode')) {
+            $this->info('Optimizing app...');
+            Artisan::call('optimize', ['--no-interaction' => true]);
+            $this->warn('Done.');
+        }
 
         $this->installNode($pkg);
-
-        $this->info('Compiling CSS/JS assets...');
-        Process::fromShellCommandline('npm -g i yarn')->run();
-        Process::fromShellCommandline('yarn install')->run();
-        Process::fromShellCommandline('yarn run '.$this->option('dev-mode') ? 'dev' : 'prod')->run();
-        $this->warn('Done.');
+        $this->compileAssets();
 
         $this->configureRoadRunner();
 
@@ -114,7 +113,7 @@ class CoreInstallCommand extends Command
         $this->info('Core installation completed!');
 
         if ($this->option('dev-mode')) {
-            Artisan::call('db:seed', ['--force' => true]);
+            Artisan::call('db:seed', ['--force' => true, '--no-interaction' => true]);
         }
 
         return 0;
@@ -274,11 +273,20 @@ class CoreInstallCommand extends Command
     {
         $this->info('Installing NodeJS...');
         Process::fromShellCommandline('curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -')->run();
-        if (!$pkg->install(['nodejs'])) {
-            $this->error('Error during MariaDB installation.');
+        if (!$pkg->install(['nodejs', 'npm'])) {
+            $this->error('Error during nodeJS installation.');
             $this->error($pkg->getLastStdOut());
             exit(1);
         }
+        $this->warn('Done.');
+    }
+
+    private function compileAssets()
+    {
+        $this->info('Compiling CSS/JS assets...');
+        Process::fromShellCommandline('npm -g install yarn')->run();
+        Process::fromShellCommandline('yarn install', base_path())->run();
+        Process::fromShellCommandline('yarn run '.($this->option('dev-mode') ? 'dev' : 'prod'), base_path())->run();
         $this->warn('Done.');
     }
 }

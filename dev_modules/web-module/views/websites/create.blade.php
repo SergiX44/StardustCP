@@ -44,8 +44,8 @@
                                 'label' => 'Parent Domain',
                                 'name' => 'parent_domain',
                                 'options' => [
-                                1 => 'google.com',
-                                12 => 'amazon.com'
+                                    1 => 'google.com',
+                                    12 => 'amazon.com'
                                 ]
                                 ])
 
