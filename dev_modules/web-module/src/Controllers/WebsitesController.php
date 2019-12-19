@@ -5,6 +5,8 @@ namespace Modules\Web\Controllers;
 use Core\Http\Controllers\Controller;
 use Core\Models\IP;
 use Illuminate\Http\Request;
+use Modules\Domain\Models\Domain;
+use Modules\Domain\Requests\ValidateDomain;
 
 class WebsitesController extends Controller
 {
@@ -21,7 +23,7 @@ class WebsitesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -51,16 +53,33 @@ class WebsitesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'type' => 'in:domain,subdomain',
-            'domain_value' => 'regex:/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/im',
+        /** @var ValidateDomain $domainValidator */
+        $domainValidator = app()->make(ValidateDomain::class);
+
+        $this->validate($domainValidator, [
             'ipv4' => 'required|exists:system_ips,id',
             'ipv6' => 'present'
         ]);
+
+        $parsedDomain = explode('.', $request->get('domain'));
+
+        $domain = new Domain();
+        $domain->user_id = auth()->id();
+        $domain->extension = $parsedDomain[array_key_last($parsedDomain)];
+        $domain->name = $parsedDomain[0];
+        $domain->is_sld = count($parsedDomain) < 1;
+        $domain->used_count = 1;
+
+        if ($request->get('parent_domain', null) !== null) {
+            $domain->parent_domain = $request->get('parent_domain');
+        }
+        $domain->save();
     }
 
     /**

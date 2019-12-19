@@ -24,7 +24,7 @@ class ValidateDomain extends FormRequest
 	public function rules()
 	{
 		return [
-			'domain' => 'required|regex:/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/igm',
+			'domain' => 'required|regex:/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/im',
 			'parent_domain' => 'nullable|exists:domains,id',
 		];
 	}

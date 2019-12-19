@@ -174,9 +174,9 @@ class CoreInstallCommand extends Command
 
         DB::disconnect();
 
-        $appName = config('app.name');
-        File::put("/etc/mysql/mariadb.conf.d/100-{$appName}-overrides.cnf", View::make('templates.mariadb.overrides'));
-        File::chmod("/etc/mysql/mariadb.conf.d/100-{$appName}-overrides.cnf", 0644);
+        $slug = str_slug(config('app.name'));
+        File::put("/etc/mysql/mariadb.conf.d/100-{$slug}-overrides.cnf", View::make('templates.mariadb.overrides'));
+        File::chmod("/etc/mysql/mariadb.conf.d/100-{$slug}-overrides.cnf", 0644);
 
         $this->info('Configure open file limit...');
 
@@ -284,9 +284,9 @@ class CoreInstallCommand extends Command
     private function compileAssets()
     {
         $this->info('Compiling CSS/JS assets...');
-        Process::fromShellCommandline('npm -g install yarn')->run();
-        Process::fromShellCommandline('yarn install', base_path())->run();
-        Process::fromShellCommandline('yarn run '.($this->option('dev-mode') ? 'dev' : 'prod'), base_path())->run();
+        Process::fromShellCommandline('npm -g install yarn', null, null, null, null)->run();
+        Process::fromShellCommandline('yarn install', base_path(), null, null, null)->run();
+        Process::fromShellCommandline('yarn run '.($this->option('dev-mode') ? 'development' : 'production'), base_path(), null, null, null)->run();
         $this->warn('Done.');
     }
 }

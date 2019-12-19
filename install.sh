@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ "$EUID" -ne 0 ]]
-  then echo "You must run the installer as root."
-  exit 1
+if [ "$EUID" -ne 0 ]; then
+    echo "You must run the installer as root."
+    exit 1
 fi
 
 echo "Installing required installer packages..."

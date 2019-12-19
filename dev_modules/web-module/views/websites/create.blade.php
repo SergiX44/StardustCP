@@ -45,11 +45,13 @@
                                 'name' => 'parent_domain',
                                 'options' => [
                                     1 => 'google.com',
-                                    12 => 'amazon.com'
-                                ]
+                                    12 => 'amazon.com',
+                                    2 => 'apple.com',
+                                ],
+                                'selected' => false
                                 ])
 
-                                @formInput(['name' => 'domain_value', 'label' => 'Domain or Subdomain Name'])
+                                @formInput(['name' => 'domain', 'label' => 'Domain or Subdomain Name'])
 
                                 @formSelect(['name' => 'ipv4', 'label' => 'IPv4', 'options' => $ipv4])
 
