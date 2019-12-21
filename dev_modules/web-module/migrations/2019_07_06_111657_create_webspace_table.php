@@ -30,7 +30,7 @@ class CreateWebspaceTable extends Migration
             $table->text('php_directives')->nullable();
             $table->timestamps();
 
-            $table->foreign('domain_id')->references('id')->on('domains')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('domain_id')->references('id')->on('domains')->onUpdate('cascade');
             $table->foreign('ipv4_id')->references('id')->on('system_ips')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('ipv6_id')->references('id')->on('system_ips')->onUpdate('cascade')->onDelete('set null');
         });
