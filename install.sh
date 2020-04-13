@@ -14,6 +14,7 @@ echo "Starting installer..."
 
 ## TODO: remove, dev purpose ##
 rm .env
+rm .install.sh.log
 rm -rf .root_db
 rm rr
 php artisan optimize:clear

@@ -15,7 +15,7 @@ class CreateWebspaceTable extends Migration
     {
         Schema::create('webspace', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('domain_id');
+            $table->unsignedBigInteger('domain_id')->nullable();
             $table->unsignedBigInteger('system_user_id');
             $table->unsignedBigInteger('ipv4_id')->nullable();
             $table->unsignedBigInteger('ipv6_id')->nullable();
@@ -31,6 +31,7 @@ class CreateWebspaceTable extends Migration
             $table->timestamps();
 
             $table->foreign('domain_id')->references('id')->on('domains')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('system_user_id')->references('id')->on('system_users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('ipv4_id')->references('id')->on('system_ips')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('ipv6_id')->references('id')->on('system_ips')->onUpdate('cascade')->onDelete('set null');
         });
