@@ -43,9 +43,16 @@ class WebsitesController extends Controller
 
         $ipv6->prepend('(Not set)', '');
 
+        $domainsSld = Domain::where('is_sld', true)
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id => "$item->name.$item->extension"];
+            });
+
         return view('web::websites.create', [
             'ipv4' => $ipv4,
             'ipv6' => $ipv6,
+            'domains' => $domainsSld
         ]);
     }
 
@@ -71,12 +78,12 @@ class WebsitesController extends Controller
 
         $domain = new Domain();
         $domain->user_id = auth()->id();
-        $domain->extension = $parsedDomain[array_key_last($parsedDomain)];
+        $domain->extension = $request->get('parent_domain') ? null : $parsedDomain[array_key_last($parsedDomain)];
         $domain->name = $parsedDomain[0];
-        $domain->is_sld = count($parsedDomain) < 1;
+        $domain->is_sld = count($parsedDomain) === 2;
         $domain->used_count = 1;
 
-        if ($request->get('parent_domain', null) !== null) {
+        if ($request->get('parent_domain') !== null) {
             $domain->parent_domain = $request->get('parent_domain');
         }
         $domain->save();

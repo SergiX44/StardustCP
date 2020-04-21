@@ -12,15 +12,24 @@
     "repositories": [
         {
             "type": "path",
-            "url": "./dev_modules/web-module"
+            "url": "./dev_modules/web-module",
+            "options": {
+                "symlink": true
+            }
         },
         {
             "type": "path",
-            "url": "./dev_modules/domain-module"
+            "url": "./dev_modules/domain-module",
+            "options": {
+                "symlink": true
+            }
         },
         {
             "type": "path",
-            "url": "./dev_modules/database-module"
+            "url": "./dev_modules/database-module",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "require": {
@@ -30,20 +39,20 @@
         "acmephp/core": "^1.1",
         "fideloper/proxy": "^4.0",
         "hunternnm/laravel-roadrunner": "^2.0",
-        "laravel/framework": "^6.0",
+        "laravel/framework": "^7.0",
+        "laravel/ui": "^2.0",
         "laravel/helpers": "^1.1",
-        "laravel/tinker": "^1.0",
+        "laravel/tinker": "^2.0",
         "spiral/roadrunner": "^1.5",
         "stardustcp/database-module": "^1.0",
-        "stardustcp/web-module": "^1.0",
-        "symfony/process": "^4.3"
+        "stardustcp/web-module": "^1.0"
     },
     "require-dev": {
-        "facade/ignition": "^1.4",
+        "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,

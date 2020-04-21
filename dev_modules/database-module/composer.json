@@ -16,7 +16,6 @@
         }
     ],
     "require": {
-        "php": "^7.1",
         "ext-json": "*",
         "thecodingmachine/safe": "^0.1.16",
         "stardustcp/domain-module": "^1.0"

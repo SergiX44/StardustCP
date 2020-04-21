@@ -43,11 +43,7 @@
                                 @formSelect([
                                 'label' => 'Parent Domain',
                                 'name' => 'parent_domain',
-                                'options' => [
-                                    1 => 'google.com',
-                                    12 => 'amazon.com',
-                                    2 => 'apple.com',
-                                ],
+                                'options' => $domains,
                                 'selected' => false
                                 ])
 

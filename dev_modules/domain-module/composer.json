@@ -16,7 +16,6 @@
         }
     ],
     "require": {
-        "php": "^7.1",
         "ext-json": "*",
         "thecodingmachine/safe": "^0.1.16"
     },
@@ -33,7 +32,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true
