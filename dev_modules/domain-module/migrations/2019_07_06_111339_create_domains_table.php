@@ -22,6 +22,7 @@ class CreateDomainsTable extends Migration
 	        $table->unsignedBigInteger('parent_domain')->nullable();
 	        $table->unsignedInteger('used_count')->default(0);
 	        $table->timestamps();
+	        $table->unique(['name', 'extension']);
 
 	        $table->foreign('parent_domain')->references('id')->on('domains')->onUpdate('cascade')->onDelete('cascade');
 	        $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');

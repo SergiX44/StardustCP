@@ -3,10 +3,14 @@
 namespace Modules\Web\Controllers;
 
 use Core\Http\Controllers\Controller;
+use Core\Jobs\CreateSystemUser;
 use Core\Models\IP;
+use Core\Models\SystemUser;
 use Illuminate\Http\Request;
 use Modules\Domain\Models\Domain;
 use Modules\Domain\Requests\ValidateDomain;
+use Modules\Web\Jobs\CreateWebspace;
+use Modules\Web\Models\Webspace;
 
 class WebsitesController extends Controller
 {
@@ -78,7 +82,7 @@ class WebsitesController extends Controller
 
         $domain = new Domain();
         $domain->user_id = auth()->id();
-        $domain->extension = $request->get('parent_domain') ? null : $parsedDomain[array_key_last($parsedDomain)];
+        $domain->extension = $request->get('parent_domain') === null ? $parsedDomain[array_key_last($parsedDomain)] : null;
         $domain->name = $parsedDomain[0];
         $domain->is_sld = count($parsedDomain) === 2;
         $domain->used_count = 1;
@@ -87,6 +91,17 @@ class WebsitesController extends Controller
             $domain->parent_domain = $request->get('parent_domain');
         }
         $domain->save();
+
+        $systemUser = SystemUser::new('/var/www/'.$request->get('domain'));
+        $systemUser->save();
+
+        $this->dispatch(new CreateSystemUser($systemUser));
+
+        $webspace = new Webspace();
+        $webspace->fill($request->all());
+        $webspace->save();
+
+        $this->dispatch(new CreateWebspace($webspace));
     }
 
     /**

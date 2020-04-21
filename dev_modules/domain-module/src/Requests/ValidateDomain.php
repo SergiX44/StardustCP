@@ -3,6 +3,7 @@
 namespace Modules\Domain\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Domain\Models\Domain;
 
 class ValidateDomain extends FormRequest
 {
@@ -52,6 +53,20 @@ class ValidateDomain extends FormRequest
     {
         $validator->sometimes('domain', 'regex:/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/im', function ($input) {
             return $input->parent_domain === null;
+        });
+
+        $validator->after(function ($validator) {
+            if ($this->get('parent_domain') === null) {
+                $exploded = explode('.', $this->get('domain'));
+
+                if (Domain::where('name', $exploded[0])->where('extension', $exploded[1])->exists()) {
+                    $validator->errors()->add('domain', 'The provided domain already exists');
+                }
+            } else {
+                if (Domain::where('name', $this->get('domain'))->where('parent_domain', $this->get('parent_domain'))->exists()) {
+                    $validator->errors()->add('domain', 'The provided subdomain already exists');
+                }
+            }
         });
     }
 }
