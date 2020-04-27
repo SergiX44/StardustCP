@@ -9,6 +9,12 @@ use function Safe\json_decode;
 
 class WebModule extends BaseModule
 {
+    const WEB_BASE_DIR = '/var/www/';
+    const WEB_SITE_LOGS_DIR = 'logs/';
+    const WEB_SITE_DOCROOT_DIR = 'httpdocs/';
+    const WEB_SITE_SSL_DIR = 'ssl/';
+    const WEB_SITE_TMP_DIR = 'temp/';
+    const WEB_SITE_SSH_HOME_DIR = 'home/';
 
 	/**
 	 * @return string

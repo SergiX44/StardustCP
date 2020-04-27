@@ -21,7 +21,7 @@ class RoadRunnerService extends BaseService
         $slug = str_slug(config('app.name'));
 
         $baseDir = base_path();
-        Process::fromShellCommandline("useradd -d {$baseDir} {$slug}")->run();
+        Process::fromShellCommandline("useradd --shell /bin/false --user-group --home-dir {$baseDir} {$slug}")->run();
 
         if ($devMode) {
             Process::fromShellCommandline("usermod -aG vboxsf {$slug}")->run();

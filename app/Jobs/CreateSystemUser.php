@@ -37,6 +37,6 @@ class CreateSystemUser implements ShouldQueue
     public function handle()
     {
         $u = $this->user;
-        Process::fromShellCommandline("useradd --system --create-home --user-group --home-dir $u->home_dir $u->user")->run();
+        Process::fromShellCommandline("useradd --system --shell /bin/false --create-home --user-group --home-dir $u->home_dir $u->user")->run();
     }
 }

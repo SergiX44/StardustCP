@@ -34,6 +34,7 @@ class CreateWebspace implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $systemUser = $this->webspace->systemUser();
+        dd($systemUser, $this->webspace->domain());
     }
 }

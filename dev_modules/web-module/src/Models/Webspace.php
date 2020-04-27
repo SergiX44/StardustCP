@@ -2,7 +2,10 @@
 
 namespace Modules\Web\Models;
 
+use Core\Models\IP;
+use Core\Models\SystemUser;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Domain\Models\Domain;
 
 class Webspace extends Model
 {
@@ -22,4 +25,36 @@ class Webspace extends Model
         'php_open_basedir',
         'php_directives'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function domain()
+    {
+        return $this->hasOne(Domain::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function systemUser()
+    {
+        return $this->hasOne(SystemUser::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ipv4()
+    {
+        return $this->hasOne(IP::class, null, 'ipv4_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ipv6()
+    {
+        return $this->hasOne(IP::class, null, 'ipv6_id');
+    }
 }

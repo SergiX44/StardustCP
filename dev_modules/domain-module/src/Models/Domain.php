@@ -15,4 +15,9 @@ class Domain extends Model
         'is_sld',
         'parent_domain',
     ];
+
+    public function parent_domain()
+    {
+        return $this->hasOne(Domain::class, 'parent_domain', 'id');
+    }
 }

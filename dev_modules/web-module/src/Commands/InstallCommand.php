@@ -75,7 +75,6 @@ class InstallCommand extends Command
             $this->error($pkg->getLastStdOut());
             exit(1);
         }
-        $this->warn('Done.');
     }
 
     protected function configureWebServer(?IPackageManager $pkg)
@@ -87,15 +86,13 @@ class InstallCommand extends Command
 
         Process::fromShellCommandline('a2enconf httpoxy')->run();
         Process::fromShellCommandline('systemctl restart apache2')->run();
-
-        $this->warn('Done.');
     }
 
     protected function createDefaultVirtualHost()
     {
         File::deleteDirectory('/var/www/html');
         File::makeDirectory('/var/www/default');
-        File::put('/var/www/default/index.html', "You shouldn't be here. Get out.");
+        File::put('/var/www/default/index.html', "You shouldn't be here. Get out. >:(");
 
         File::put('/etc/apache2/sites-available/000-default.conf', View::make('web::templates.apache.default'));
         Process::fromShellCommandline('systemctl restart apache2')->run();

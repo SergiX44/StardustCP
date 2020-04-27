@@ -7,13 +7,18 @@ use Core\Jobs\CreateSystemUser;
 use Core\Models\IP;
 use Core\Models\SystemUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\Domain\Models\Domain;
 use Modules\Domain\Requests\ValidateDomain;
+use Modules\Domain\Traits\ResolveDomain;
 use Modules\Web\Jobs\CreateWebspace;
 use Modules\Web\Models\Webspace;
+use Modules\Web\WebModule;
 
 class WebsitesController extends Controller
 {
+    use ResolveDomain;
+
     /**
      * Display a listing of the resource.
      *
@@ -80,28 +85,41 @@ class WebsitesController extends Controller
 
         $parsedDomain = explode('.', $request->get('domain'));
 
-        $domain = new Domain();
-        $domain->user_id = auth()->id();
-        $domain->extension = $request->get('parent_domain') === null ? $parsedDomain[array_key_last($parsedDomain)] : null;
-        $domain->name = $parsedDomain[0];
-        $domain->is_sld = count($parsedDomain) === 2;
-        $domain->used_count = 1;
+        DB::transaction(function () use (&$parsedDomain, &$request) {
+            $domain = new Domain();
+            $domain->user_id = auth()->id();
+            $domain->extension = $request->get('parent_domain') === null ? $parsedDomain[array_key_last($parsedDomain)] : null;
+            $domain->name = $parsedDomain[0];
+            $domain->is_sld = count($parsedDomain) === 2;
+            $domain->used_count = 1;
 
-        if ($request->get('parent_domain') !== null) {
-            $domain->parent_domain = $request->get('parent_domain');
-        }
-        $domain->save();
+            if ($request->get('parent_domain') !== null) {
+                $domain->parent_domain = $request->get('parent_domain');
+            }
+            $domain->save();
 
-        $systemUser = SystemUser::new('/var/www/'.$request->get('domain'));
-        $systemUser->save();
+            $systemUser = SystemUser::new('/var/www/'.$request->get('domain'));
+            $systemUser->save();
 
-        $this->dispatch(new CreateSystemUser($systemUser));
+            $webspace = new Webspace();
+            $webspace->fill($request->all());
 
-        $webspace = new Webspace();
-        $webspace->fill($request->all());
-        $webspace->save();
+            $topParent = $this->getTopParentDomain($domain);
 
-        $this->dispatch(new CreateWebspace($webspace));
+            $webspace->system_user_id = $systemUser->id;
+            $webspace->web_root = WebModule::WEB_BASE_DIR.$topParent->name.'.'.$topParent->extension.DIRECTORY_SEPARATOR;
+
+            if ($request->get('parent_domain') !== null) {
+                $webspace->document_root = $webspace->web_root.$domain->name.DIRECTORY_SEPARATOR;
+            } else {
+                $webspace->document_root = $webspace->web_root.WebModule::WEB_SITE_DOCROOT_DIR;
+            }
+
+            $webspace->save();
+
+            $this->dispatch(new CreateSystemUser($systemUser));
+            $this->dispatch(new CreateWebspace($webspace));
+        });
     }
 
     /**
