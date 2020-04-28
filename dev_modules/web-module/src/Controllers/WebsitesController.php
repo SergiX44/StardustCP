@@ -107,6 +107,7 @@ class WebsitesController extends Controller
             $topParent = $this->getTopParentDomain($domain);
 
             $webspace->system_user_id = $systemUser->id;
+            $webspace->domain_id = $domain->id;
             $webspace->web_root = WebModule::WEB_BASE_DIR.$topParent->name.'.'.$topParent->extension.DIRECTORY_SEPARATOR;
 
             if ($request->get('parent_domain') !== null) {

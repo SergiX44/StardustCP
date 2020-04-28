@@ -7,11 +7,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Domain\Traits\ResolveDomain;
 use Modules\Web\Models\Webspace;
 
 class CreateWebspace implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ResolveDomain;
+
+    public $tries = 3;
+
     /**
      * @var Webspace
      */
@@ -35,6 +39,6 @@ class CreateWebspace implements ShouldQueue
     public function handle()
     {
         $systemUser = $this->webspace->systemUser();
-        dd($systemUser, $this->webspace->domain());
+        dd($this->webspace->domain_id);
     }
 }

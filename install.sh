@@ -18,6 +18,7 @@ rm .install.sh.log
 rm -rf .root_db
 rm rr
 php artisan optimize:clear
+apt install -y screen
 ###############################
 
 php artisan auto-install "$@"

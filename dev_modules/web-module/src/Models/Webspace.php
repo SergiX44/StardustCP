@@ -23,8 +23,27 @@ class Webspace extends Model
         'ssl_enabled',
         'le_enabled',
         'php_open_basedir',
-        'php_directives'
+        'php_directives',
+        'php_enabled',
+        'active',
     ];
+
+    protected $casts = [
+        'ssl_enabled' => 'boolean',
+        'le_enabled' => 'boolean',
+        'php_enabled' => 'boolean',
+        'active' => 'boolean',
+    ];
+
+    public function setSslEnabledAttribute($value)
+    {
+        $this->attributes['ssl_enabled'] = $value === 'on';
+    }
+
+    public function setLeEnabledAttribute($value)
+    {
+        $this->attributes['le_enabled'] = $value === 'on';
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

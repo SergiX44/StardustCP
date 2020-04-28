@@ -25,9 +25,11 @@ class CreateWebspaceTable extends Migration
             $table->unsignedInteger('traffic_quota')->nullable();
             $table->boolean('ssl_enabled')->default(false);
             $table->boolean('le_enabled')->default(false);
+            $table->boolean('php_enabled')->default(false);
             $table->text('php_open_basedir')->nullable();
             $table->text('webserver_directives')->nullable();
             $table->text('php_directives')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->foreign('domain_id')->references('id')->on('domains')->onUpdate('cascade')->onDelete('set null');
