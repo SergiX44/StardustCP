@@ -22,7 +22,7 @@ class WebsitesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -79,8 +79,8 @@ class WebsitesController extends Controller
         $domainValidator = app()->make(ValidateDomain::class);
 
         $this->validate($domainValidator, [
-            'ipv4' => 'required|exists:system_ips,id',
-            'ipv6' => 'present'
+            'ipv4_id' => 'required|exists:system_ips,id',
+            'ipv6_id' => 'present'
         ]);
 
         $parsedDomain = explode('.', $request->get('domain'));
@@ -108,12 +108,12 @@ class WebsitesController extends Controller
 
             $webspace->system_user_id = $systemUser->id;
             $webspace->domain_id = $domain->id;
-            $webspace->web_root = WebModule::WEB_BASE_DIR.$topParent->name.'.'.$topParent->extension.DIRECTORY_SEPARATOR;
+            $webspace->web_root = config('web-module.base_dir').$topParent->name.'.'.$topParent->extension.DIRECTORY_SEPARATOR;
 
             if ($request->get('parent_domain') !== null) {
                 $webspace->document_root = $webspace->web_root.$domain->name.DIRECTORY_SEPARATOR;
             } else {
-                $webspace->document_root = $webspace->web_root.WebModule::WEB_SITE_DOCROOT_DIR;
+                $webspace->document_root = $webspace->web_root.config('web-module.docroot_dir');
             }
 
             $webspace->save();

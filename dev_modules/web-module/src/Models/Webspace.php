@@ -45,35 +45,40 @@ class Webspace extends Model
         $this->attributes['le_enabled'] = $value === 'on';
     }
 
+    public function setPhpEnabledAttribute($value)
+    {
+        $this->attributes['php_enabled'] = $value === 'on';
+    }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function domain()
     {
-        return $this->hasOne(Domain::class);
+        return $this->belongsTo(Domain::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function systemUser()
     {
-        return $this->hasOne(SystemUser::class);
+        return $this->belongsTo(SystemUser::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ipv4()
     {
-        return $this->hasOne(IP::class, null, 'ipv4_id');
+        return $this->belongsTo(IP::class, 'ipv4_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ipv6()
     {
-        return $this->hasOne(IP::class, null, 'ipv6_id');
+        return $this->belongsTo(IP::class, 'ipv6_id');
     }
 }

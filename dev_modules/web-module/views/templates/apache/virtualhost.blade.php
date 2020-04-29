@@ -14,7 +14,7 @@
 
     ServerName {{ $domain }}
     ServerAlias www.{{ $domain }}
-    ServerAdmin webmaster@{{ $domain }}
+    ServerAdmin webmaster{{ "@$domain" }}
 
     @if($httpsEnabled ?? false)
     Protocols h2 http/1.1
@@ -38,7 +38,7 @@
         <FilesMatch ".+\.ph(p[345]?|t|tml)$">
             SetHandler None
         </FilesMatch>
-        Options +SymlinksIfOwnerMatch Indexes
+        Options +SymlinksIfOwnerMatch -Indexes
         AllowOverride All
         Require all granted
     </Directory>
@@ -58,7 +58,7 @@
     </IfModule>
     @endif
 
-    ErrorLog {{ $logDir }}/error.log
-    CustomLog {{ $logDir }}/access.log combined
+    ErrorLog {{ $logDir }}error.log
+    CustomLog {{ $logDir }}access.log combined
 </VirtualHost>
 @endforeach

@@ -9,65 +9,58 @@ use function Safe\json_decode;
 
 class WebModule extends BaseModule
 {
-    const WEB_BASE_DIR = '/var/www/';
-    const WEB_SITE_LOGS_DIR = 'logs/';
-    const WEB_SITE_DOCROOT_DIR = 'httpdocs/';
-    const WEB_SITE_SSL_DIR = 'ssl/';
-    const WEB_SITE_TMP_DIR = 'temp/';
-    const WEB_SITE_SSH_HOME_DIR = 'home/';
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return 'web';
+    }
 
-	/**
-	 * @return string
-	 */
-	public function name()
-	{
-		return 'web';
-	}
+    /**
+     * @return null|string
+     */
+    public function fancyName()
+    {
+        return 'Web Module';
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function fancyName()
-	{
-		return 'Web Module';
-	}
+    public function icon()
+    {
+        return 'fa-globe';
+    }
 
-	public function icon()
-	{
-		return 'fa-globe';
-	}
+    /**
+     * @return null|string
+     */
+    public function description()
+    {
+        return 'The web module.';
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function description()
-	{
-		return 'The web module.';
-	}
+    /**
+     * @return bool
+     */
+    public function hasConfig()
+    {
+        return true;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function hasConfig()
-	{
-		return true;
-	}
+    /**
+     * @return null|string
+     */
+    public function configRoute()
+    {
+        return route('web.configure');
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function configRoute()
-	{
-		return route('web.configure');
-	}
-
-	/**
-	 * @return mixed
-	 * @throws \Safe\Exceptions\FilesystemException
-	 * @throws \Safe\Exceptions\JsonException
-	 */
-	public function version()
-	{
-		return json_decode(file_get_contents(__DIR__.'/../composer.json'))->version;
-	}
+    /**
+     * @return mixed
+     * @throws \Safe\Exceptions\FilesystemException
+     * @throws \Safe\Exceptions\JsonException
+     */
+    public function version()
+    {
+        return json_decode(file_get_contents(__DIR__.'/../composer.json'))->version;
+    }
 }
