@@ -69,7 +69,7 @@ class WebsitesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -121,6 +121,10 @@ class WebsitesController extends Controller
             $this->dispatch(new CreateSystemUser($systemUser));
             $this->dispatch(new CreateWebspace($webspace));
         });
+
+        session()->flash('status', ['success' => 'New webspace created.']);
+
+        return redirect()->route('web::websites.index');
     }
 
     /**

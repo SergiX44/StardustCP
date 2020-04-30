@@ -1,6 +1,6 @@
 {
-    "name": "startdustcp/startdustcp",
-    "version": "1.0",
+    "name": "startdustcp/core",
+    "version": "0.1",
     "type": "project",
     "description": "The StardustCP control panel.",
     "keywords": [
@@ -40,9 +40,9 @@
         "fideloper/proxy": "^4.0",
         "hunternnm/laravel-roadrunner": "^2.0",
         "laravel/framework": "^7.0",
-        "laravel/ui": "^2.0",
         "laravel/helpers": "^1.1",
         "laravel/tinker": "^2.0",
+        "laravel/ui": "^2.0",
         "spiral/roadrunner": "^1.5",
         "stardustcp/database-module": "^1.0",
         "stardustcp/web-module": "^1.0"
