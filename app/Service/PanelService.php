@@ -4,6 +4,7 @@
 namespace Core\Service;
 
 
+use Core\Models\IP;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
@@ -54,5 +55,22 @@ class PanelService extends BaseService
         Process::fromShellCommandline('npm -g install yarn', null, null, null, null)->run();
         Process::fromShellCommandline('yarn install', base_path(), null, null, null)->run();
         Process::fromShellCommandline('yarn run '.($devMode ? 'development' : 'production'), base_path(), null, null, null)->run();
+
+        $this->addSystemIps();
+    }
+
+    private function addSystemIps()
+    {
+        $cmd = Process::fromShellCommandline('hostname --all-ip-addresses');
+        $cmd->run();
+
+        $ips = explode(' ', $cmd->getOutput());
+
+        foreach ($ips as $ip) {
+            $ipModel = new IP();
+            $ipModel->address = $ip;
+            $ipModel->type = isIpv6($ip) ? 'ipv6' : 'ipv4';
+            $ipModel->save();
+        }
     }
 }

@@ -43,5 +43,6 @@ class CoreServiceProvider extends ServiceProvider
 		Blade::include('layouts.form.radiobtn', 'formRadio');
 		Blade::include('layouts.form.select', 'formSelect');
 		Blade::include('layouts.form.switch', 'formSwitch');
+		Blade::include('layouts.form.textarea', 'formTextarea');
 	}
 }

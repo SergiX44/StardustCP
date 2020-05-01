@@ -4,6 +4,7 @@ namespace Modules\Web\Commands;
 
 use Core\Environment\OS;
 use Core\Environment\PackageManagers\IPackageManager;
+use Core\Models\IP;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
@@ -59,17 +60,22 @@ class InstallCommand extends Command
         $pkg = $env->getPackageManager();
         $pkg->update();
 
+        $this->info('Installing Apache and related packages...');
         $this->installWebServer($pkg);
+
+        $this->info('Configuring Apache...');
         $this->configureWebServer($pkg);
 
+        $this->info('Creating default virtual hosts...');
         $this->createDefaultVirtualHost();
+
+        $this->info('Web module installation completed!');
 
         return 0;
     }
 
     protected function installWebServer(?IPackageManager $pkg)
     {
-        $this->info('Installing Apache and packages...');
         if (!$pkg->install(['apache2', 'apache2-doc', 'apache2-utils', 'apache2-suexec-pristine', 'ssl-cert'])) {
             $this->error('Error during Apache installation.');
             $this->error($pkg->getLastStdOut());
@@ -79,7 +85,6 @@ class InstallCommand extends Command
 
     protected function configureWebServer(?IPackageManager $pkg)
     {
-        $this->info('Configuring Apache...');
         Process::fromShellCommandline('a2enmod suexec rewrite ssl actions include dav_fs dav auth_digest cgi headers actions proxy_fcgi alias http2')->run();
 
         File::put('/etc/apache2/conf-available/httpoxy.conf', View::make('web::templates.apache.httpoxy'));
@@ -94,7 +99,9 @@ class InstallCommand extends Command
         File::makeDirectory('/var/www/default');
         File::put('/var/www/default/index.html', "You shouldn't be here. Get out. >:(");
 
-        File::put('/etc/apache2/sites-available/000-default.conf', View::make('web::templates.apache.default'));
+        File::put('/etc/apache2/sites-available/000-default.conf', View::make('web::templates.apache.default', [
+            'ips' => IP::all()
+        ]));
         Process::fromShellCommandline('systemctl restart apache2')->run();
     }
 }

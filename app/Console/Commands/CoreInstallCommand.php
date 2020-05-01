@@ -75,7 +75,7 @@ class CoreInstallCommand extends Command
             return 1;
         }
 
-        $rootPassword = $this->secret('Insert new DBMS password for "root". (Empty for generate): ');
+        $rootPassword = $this->secret('Insert new DBMS password for "root". (Empty to generate): ');
         if ($rootPassword === null) {
             $rootPassword = str_random(16);
         }
@@ -119,6 +119,7 @@ class CoreInstallCommand extends Command
         $this->info('Core installation completed!');
 
         if ($this->option('dev-mode')) {
+            $this->warn('[DEV] Database seeding...');
             Artisan::call('db:seed', ['--force' => true, '--no-interaction' => true]);
         }
 

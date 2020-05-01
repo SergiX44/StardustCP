@@ -61,10 +61,6 @@ class CreateWebspace implements ShouldQueue
             chgrp($path, $systemUser->group);
         }
 
-        File::put($this->webspace->document_root.'index.html', "I'm working!");
-        chown($this->webspace->document_root.'index.html', $systemUser->user);
-        chgrp($this->webspace->document_root.'index.html', $systemUser->group);
-
         $ips = [];
 
         $ipv4 = $this->webspace->ipv4()->first();
@@ -77,9 +73,9 @@ class CreateWebspace implements ShouldQueue
 
         $ipv6 = $this->webspace->ipv6()->first();
         if ($ipv6 !== null) {
-            $ips["$ipv6->address:80"] = false;
+            $ips["[$ipv6->address]:80"] = false;
             if ($this->webspace->ssl_enabled) {
-                $ips["$ipv6->address:443"] = true;
+                $ips["[$ipv6->address]:443"] = true;
             }
         }
 
@@ -96,6 +92,10 @@ class CreateWebspace implements ShouldQueue
             'phpMode' => null, // TODO: change
             'logDir' => $this->webspace->web_root.config('web-module.logs_dir'),
         ]));
+
+        File::put($this->webspace->document_root.'index.html', "I'm working! Hello from $fullDomain!");
+        chown($this->webspace->document_root.'index.html', $systemUser->user);
+        chgrp($this->webspace->document_root.'index.html', $systemUser->group);
 
         Process::fromShellCommandline("a2ensite 100-{$fullDomain}")->run();
         Process::fromShellCommandline("systemctl reload apache2")->run();

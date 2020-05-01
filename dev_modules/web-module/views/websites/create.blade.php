@@ -55,13 +55,13 @@
 
                                 @formSwitch(['name' => 'php_enabled', 'label' => 'PHP Enabled'])
 
-                                @formSwitch(['name' => 'ssl_enabled', 'label' => 'SSL Enabled', 'checked' => true])
+                                @formSwitch(['name' => 'ssl_enabled', 'label' => 'SSL Enabled'])
                             </div>
                             <div class="tab-pane fade" id="webserver-conf">
-                                Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui.
+                                @formTextarea(['name' => 'webserver_directives', 'label' => 'Webserver directives'])
                             </div>
                             <div class="tab-pane fade" id="php-conf">
-                                Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor.
+                                @formTextarea(['name' => 'php_directives', 'label' => 'PHP directives'])
                             </div>
                         </div>
 

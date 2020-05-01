@@ -122,9 +122,9 @@ class WebsitesController extends Controller
             $this->dispatch(new CreateWebspace($webspace));
         });
 
-        session()->flash('status', ['success' => 'New webspace created.']);
+        session()->flash('status', ['success' => 'The new webspace is now enqueued for creation.']);
 
-        return redirect()->route('web::websites.index');
+        return redirect()->route('web.websites.index');
     }
 
     /**

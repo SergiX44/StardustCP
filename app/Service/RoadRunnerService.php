@@ -23,24 +23,22 @@ class RoadRunnerService extends BaseService
         $baseDir = base_path();
         Process::fromShellCommandline("useradd --shell /bin/false --user-group --home-dir {$baseDir} {$slug}")->run();
 
-        if ($devMode) {
-            Process::fromShellCommandline("usermod -aG vboxsf {$slug}")->run();
-            Process::fromShellCommandline("usermod -aG root {$slug}")->run();
-        }
-
-        File::put("/etc/systemd/system/$slug.service", View::make('templates.roadrunner.rr-service', [
+        File::put("/etc/systemd/system/{$slug}.service", View::make('templates.roadrunner.rr-service', [
             'user' => $slug,
             'group' => $slug,
             'workingPath' => $baseDir,
             'rrPath' => base_path('rr')
         ]));
 
-        if (!$devMode) {
+        if ($devMode) {
+            Process::fromShellCommandline("usermod -aG vboxsf {$slug}")->run();
+            Process::fromShellCommandline("usermod -aG root {$slug}")->run();
+        } else {
             Process::fromShellCommandline("chown -R {$slug} ".base_path(), null, null, null, null)->run();
         }
 
         Process::fromShellCommandline("systemctl daemon-reload")->run();
-        Process::fromShellCommandline("systemctl enable {$slug}")->run();
-        Process::fromShellCommandline("systemctl restart {$slug}")->run();
+        Process::fromShellCommandline("systemctl enable {$slug}.service")->run();
+        Process::fromShellCommandline("systemctl restart {$slug}.service")->run();
     }
 }
