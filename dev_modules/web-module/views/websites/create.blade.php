@@ -49,9 +49,9 @@
 
                                 @formInput(['name' => 'domain', 'label' => 'Domain or Subdomain Name'])
 
-                                @formSelect(['name' => 'ipv4_id', 'label' => 'IPv4', 'options' => $ipv4])
+                                @formSelect(['name' => 'ipv4_id', 'label' => 'IPv4', 'options' => $ipv4, 'selected' => $ipv4Selected])
 
-                                @formSelect(['name' => 'ipv6_id', 'label' => 'IPv6', 'options' => $ipv6])
+                                @formSelect(['name' => 'ipv6_id', 'label' => 'IPv6', 'options' => $ipv6, 'selected' => $ipv6Selected])
 
                                 @formSwitch(['name' => 'php_enabled', 'label' => 'PHP Enabled'])
 
@@ -61,6 +61,16 @@
                                 @formTextarea(['name' => 'webserver_directives', 'label' => 'Webserver directives'])
                             </div>
                             <div class="tab-pane fade" id="php-conf">
+                                @formRadio([
+                                'name' => 'php_mode',
+                                'label' => 'PHP Execution Mode',
+                                'items' => [
+                                    ['value' => 'mod_php', 'text' => 'ModPHP'],
+                                    ['value' => 'fastcgi', 'text' => 'FastCGI'],
+                                    ['value' => 'fpm', 'text' => 'PHP-FPM', 'active' => true],
+                                ],
+                                ])
+
                                 @formTextarea(['name' => 'php_directives', 'label' => 'PHP directives'])
                             </div>
                         </div>

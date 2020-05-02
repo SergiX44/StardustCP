@@ -4,6 +4,7 @@ namespace Core\Console\Commands;
 
 use Core\Environment\OS;
 use Core\Environment\PackageManagers\IPackageManager;
+use Core\Models\IP;
 use Core\Service\MariaDbService;
 use Core\Service\NodeJsService;
 use Core\Service\PanelService;
@@ -111,10 +112,12 @@ class CoreInstallCommand extends Command
         $this->info('Configuring RoadRunner...');
         RoadRunnerService::make()->configure(['dev-mode' => $this->option('dev-mode')]);
 
+        $this->info('Adding configured IPs to the system...');
+        $this->addSystemIps();
+
         // Saving root password, and make it read-only for the root user
         File::put('.root_db', $rootPassword);
         File::chmod('.root_db', 0400);
-
         $this->warn("DBMS root password: {$rootPassword}");
         $this->info('Core installation completed!');
 
@@ -147,5 +150,20 @@ class CoreInstallCommand extends Command
         }
         $this->info('Configuring MariaDB...');
         $mariaDb->configure(['password' => $password]);
+    }
+
+    private function addSystemIps()
+    {
+        $cmd = Process::fromShellCommandline('hostname --all-ip-addresses');
+        $cmd->run();
+
+        $ips = explode(' ', trim($cmd->getOutput()));
+
+        foreach ($ips as $ip) {
+            $ipModel = new IP();
+            $ipModel->address = $ip;
+            $ipModel->type = isIpv6($ip) ? 'ipv6' : 'ipv4';
+            $ipModel->save();
+        }
     }
 }

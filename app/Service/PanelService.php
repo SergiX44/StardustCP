@@ -55,22 +55,5 @@ class PanelService extends BaseService
         Process::fromShellCommandline('npm -g install yarn', null, null, null, null)->run();
         Process::fromShellCommandline('yarn install', base_path(), null, null, null)->run();
         Process::fromShellCommandline('yarn run '.($devMode ? 'development' : 'production'), base_path(), null, null, null)->run();
-
-        $this->addSystemIps();
-    }
-
-    private function addSystemIps()
-    {
-        $cmd = Process::fromShellCommandline('hostname --all-ip-addresses');
-        $cmd->run();
-
-        $ips = explode(' ', $cmd->getOutput());
-
-        foreach ($ips as $ip) {
-            $ipModel = new IP();
-            $ipModel->address = $ip;
-            $ipModel->type = isIpv6($ip) ? 'ipv6' : 'ipv4';
-            $ipModel->save();
-        }
     }
 }

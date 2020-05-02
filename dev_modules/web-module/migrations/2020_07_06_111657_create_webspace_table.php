@@ -27,6 +27,7 @@ class CreateWebspaceTable extends Migration
             $table->boolean('le_enabled')->default(false);
             $table->boolean('php_enabled')->default(false);
             $table->text('php_open_basedir')->nullable();
+            $table->enum('php_mode', ['mod_php', 'fastcgi', 'fpm'])->nullable();
             $table->text('webserver_directives')->nullable();
             $table->text('php_directives')->nullable();
             $table->boolean('active')->default(true);

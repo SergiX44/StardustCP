@@ -26,7 +26,13 @@ class WebsitesController extends Controller
      */
     public function index()
     {
-        return view('web::websites.index');
+        $webspace = Webspace::paginate(25);
+
+        //TODO: magic
+
+        return view('web::websites.index', [
+            'webspaces' => $webspace
+        ]);
     }
 
     /**
@@ -42,6 +48,8 @@ class WebsitesController extends Controller
             ->mapWithKeys(function ($item) {
                 return [$item->id => $item->address];
             });
+        $ipv4Selected = $ipv4->keys()->first();
+        $ipv4->prepend('(Not set)', '');
 
         $ipv6 = IP::select('id', 'address')
             ->where('type', 'ipv6')
@@ -49,7 +57,7 @@ class WebsitesController extends Controller
             ->mapWithKeys(function ($item) {
                 return [$item->id => $item->address];
             });
-
+        $ipv6Selected = $ipv6->keys()->first();
         $ipv6->prepend('(Not set)', '');
 
         $domainsSld = Domain::where('is_sld', true)
@@ -60,7 +68,9 @@ class WebsitesController extends Controller
 
         return view('web::websites.create', [
             'ipv4' => $ipv4,
+            'ipv4Selected' => $ipv4Selected,
             'ipv6' => $ipv6,
+            'ipv6Selected' => $ipv6Selected,
             'domains' => $domainsSld
         ]);
     }
@@ -122,7 +132,7 @@ class WebsitesController extends Controller
             $this->dispatch(new CreateWebspace($webspace));
         });
 
-        session()->flash('status', ['success' => 'The new webspace is now enqueued for creation.']);
+        session()->flash('status', ['success' => 'The website is now queued for creation.']);
 
         return redirect()->route('web.websites.index');
     }

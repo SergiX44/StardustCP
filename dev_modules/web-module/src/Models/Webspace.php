@@ -23,6 +23,7 @@ class Webspace extends Model
         'ssl_enabled',
         'le_enabled',
         'php_open_basedir',
+        'php_mode',
         'php_directives',
         'php_enabled',
         'active',
