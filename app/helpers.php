@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('isPrivateIP')) {
+if (!function_exists('isPrivateIP')) {
     /**
      * @param  string  $ip
      * @return bool
@@ -11,7 +11,7 @@ if (!defined('isPrivateIP')) {
     }
 }
 
-if (!defined('isIpv6')) {
+if (!function_exists('isIpv6')) {
     /**
      * @param  string  $ip
      * @return bool

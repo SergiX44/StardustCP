@@ -5,6 +5,7 @@ namespace Modules\Web;
 use Core\Modules\ModuleManager;
 use Illuminate\Support\ServiceProvider;
 use Modules\Web\Commands\InstallCommand;
+use Modules\Web\Commands\InstallPhpCommand;
 
 class WebServiceProvider extends ServiceProvider
 {
@@ -36,7 +37,8 @@ class WebServiceProvider extends ServiceProvider
 			], 'web-module');
 
             $this->commands([
-                InstallCommand::class
+                InstallCommand::class,
+                InstallPhpCommand::class,
             ]);
 		}
 	}
