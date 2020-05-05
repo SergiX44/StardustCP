@@ -23,7 +23,7 @@ class RoadRunnerService extends BaseService
         $baseDir = base_path();
         Process::fromShellCommandline("useradd --shell /bin/false --user-group --home-dir {$baseDir} {$slug}")->run();
 
-        File::put("/etc/systemd/system/{$slug}.service", View::make('templates.roadrunner.rr-service', [
+        File::put("/etc/systemd/system/{$slug}-web.service", View::make('templates.roadrunner.rr-service', [
             'user' => $slug,
             'group' => $slug,
             'workingPath' => $baseDir,
