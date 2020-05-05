@@ -1,4 +1,4 @@
-@inject('menu', 'Core\Menu\Menu')
+@inject('menu', 'menu')
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">

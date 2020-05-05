@@ -38,6 +38,6 @@ class MenuServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function provides()
     {
-        return [Menu::class];
+        return [Menu::class, 'menu'];
     }
 }
