@@ -69,6 +69,7 @@ class InstallPhpCommand extends Command
             return 1;
         }
 
+        $this->info('PHP support updated!');
         return 0;
     }
 

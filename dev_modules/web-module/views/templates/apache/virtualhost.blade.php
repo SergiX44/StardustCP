@@ -52,7 +52,7 @@
     <IfModule mod_proxy_fcgi.c>
         <Directory {{ $documentRoot }}>
             <FilesMatch "\.php[345]?$">
-                SetHandler {{ $fpmHandlers }}
+                SetHandler "{!! $fpmHandlers !!}"
             </FilesMatch>
         </Directory>
     </IfModule>

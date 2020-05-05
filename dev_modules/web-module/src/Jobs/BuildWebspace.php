@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
 use function Safe\chown;
 use function Safe\chgrp;
 
-class CreateWebspace implements ShouldQueue
+class BuildWebspace implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, ResolveDomain;
 
@@ -81,6 +81,7 @@ class CreateWebspace implements ShouldQueue
 
         $fullDomain = $this->getFullDomain($this->webspace->domain()->first());
 
+        $webspaceStr = "webspace{$this->webspace->id}";
         File::put("/etc/apache2/sites-available/100-{$fullDomain}.conf", View::make('web::templates.apache.virtualhost', [
             'siteDir' => $this->webspace->web_root,
             'hasHttpsVhost' => $this->webspace->ssl_enabled,
@@ -89,7 +90,8 @@ class CreateWebspace implements ShouldQueue
             'user' => $systemUser->user,
             'group' => $systemUser->group,
             'domain' => $fullDomain,
-            'phpMode' => null, // TODO: change
+            'phpMode' => $this->webspace->php_mode,
+            'fpmHandlers' => 'proxy:unix:/var/run/php/'.$webspaceStr.'.sock|fcgi://localhost',
             'logDir' => $this->webspace->web_root.config('web-module.logs_dir'),
         ]));
 

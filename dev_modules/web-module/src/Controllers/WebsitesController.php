@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Modules\Domain\Models\Domain;
 use Modules\Domain\Requests\ValidateDomain;
 use Modules\Domain\Traits\ResolveDomain;
-use Modules\Web\Jobs\CreateWebspace;
+use Modules\Web\Jobs\BuildPhpConfiguration;
+use Modules\Web\Jobs\BuildSslConfiguration;
+use Modules\Web\Jobs\BuildWebspace;
 use Modules\Web\Models\Webspace;
 use Modules\Web\WebModule;
 
@@ -129,7 +131,15 @@ class WebsitesController extends Controller
             $webspace->save();
 
             $this->dispatch(new CreateSystemUser($systemUser));
-            $this->dispatch(new CreateWebspace($webspace));
+            $this->dispatch(new BuildWebspace($webspace));
+
+            if ($request->get('php_enabled')) {
+                $this->dispatch(new BuildPhpConfiguration($webspace));
+            }
+
+            if ($request->get('ssl_enabled')) {
+                $this->dispatch(new BuildSslConfiguration($webspace));
+            }
         });
 
         session()->flash('status', ['success' => 'The website is now queued for creation.']);

@@ -24,12 +24,14 @@
                                 <th></th>
                             </tr>
                             @foreach($webspaces as $w)
-                                <td>{{ $w->id }}</td>
-                                <td>{{ $w->document_root }}</td>
-                                <td class="text-right">
-                                    <a href="#" class="btn btn-warning"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                    <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
-                                </td>
+                                <tr>
+                                    <td>{{ $w->id }}</td>
+                                    <td>{{ $w->document_root }}</td>
+                                    <td class="text-right">
+                                        <a href="#" class="btn btn-warning"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>
